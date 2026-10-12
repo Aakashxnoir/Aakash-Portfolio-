@@ -1,0 +1,290 @@
+@import "tailwindcss";
+
+/* `fx:` styles apply only while motion is on (see src/lib/motion.ts). */
+@custom-variant fx (&:where(.motion, .motion *));
+
+/*
+ * Design tokens. Source of truth: docs/DESIGN_SYSTEM.md.
+ * One theme (Noir). Components use the Tailwind utilities below (bg-bg,
+ * text-text-soft, border-rule, text-accent, ...), never raw hex values.
+ */
+:root {
+  color-scheme: dark;
+
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --text: #ededed;
+  --text-soft: #b8b8b8;
+  --text-muted: #8f8f8f;
+  /* Decorative only: 3.7:1, never for text that must be read. */
+  --text-faint: #6b6b6b;
+  --rule: #2a2a2a;
+  --accent: #ff3d2e;
+
+  --page-x: 80px;
+  --nav-height: 88px;
+  --section-gap: 180px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-text-soft: var(--text-soft);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+
+  --font-sans: var(--font-archivo), "Helvetica Neue", sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* Type scale: the 1440 value, scaling down with the viewport to 1280. */
+  --text-hero: min(14.4vw, 13rem);
+  --text-hero--line-height: 0.82;
+  --text-title: min(11.1vw, 10rem);
+  --text-title--line-height: 0.85;
+  --text-row: min(8.3vw, 7.5rem);
+  --text-row--line-height: 0.85;
+  --text-contact: min(8.9vw, 8rem);
+  --text-contact--line-height: 0.9;
+  --text-section: min(6.1vw, 5.5rem);
+  --text-section--line-height: 0.9;
+  --text-statement: min(3.9vw, 3.5rem);
+  --text-statement--line-height: 1.12;
+  --text-lead: 1.375rem;
+  --text-lead--line-height: 1.5;
+  --text-body: 1.125rem;
+  --text-body--line-height: 1.65;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.16em;
+
+  --spacing-page: var(--page-x);
+  --spacing-nav: var(--nav-height);
+  --spacing-section: var(--section-gap);
+
+  --ease-out: var(--ease-out);
+}
+
+html {
+  background: var(--bg);
+  scrollbar-gutter: stable;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: var(--text-body);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+/* Condensed uppercase display type: names, titles, headings. Weight is set per use. */
+@utility type-display {
+  font-family: var(--font-sans);
+  font-stretch: 62%;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+/* Mono label: uppercase, tracked. Size and tracking come from text-label. */
+@utility type-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  letter-spacing: var(--text-label--letter-spacing);
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+/* Text link: 1px underline in --rule; text and underline go red on hover. */
+@utility link {
+  color: var(--text);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 4px;
+  transition:
+    color 0.4s var(--ease-out),
+    border-color 0.4s var(--ease-out);
+
+  &:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+}
+
+/* Primary action: 1px red underline; text goes red on hover. */
+@utility link-primary {
+  color: var(--text);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 4px;
+  transition: color 0.4s var(--ease-out);
+
+  &:hover {
+    color: var(--accent);
+  }
+}
+
+/* Portrait: black and white, hard contrast. */
+.noir-portrait {
+  filter: grayscale(1) contrast(1.2) brightness(0.85);
+}
+
+/* ---------------------------------------------------------------------------
+ * Motion. Everything below applies only while <html> has `motion` (set before
+ * first paint when the visitor allows motion). Without JS or under reduced
+ * motion none of it applies and every page is complete and still.
+ * ------------------------------------------------------------------------- */
+
+/* A line that rises out of its mask. Clips at the line box, with room for descenders. */
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+@keyframes enter-rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes enter-fade {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+/* First-paint entrances (CSS only, so they never wait for JS). --enter-delay is set
+   by the page transition so a new page's entrance plays as the curtain lifts. */
+.motion .enter-line {
+  animation: enter-rise 1.1s var(--ease-out) both;
+  animation-delay: calc(var(--enter-delay, 0s) + var(--d, 0ms));
+}
+
+.motion .enter-fade {
+  animation: enter-fade 0.9s var(--ease-out) both;
+  animation-delay: calc(var(--enter-delay, 0s) + var(--d, 0ms));
+}
+
+/* Scroll reveals start hidden; Reveal shows them as they enter view. */
+.motion [data-reveal] {
+  visibility: hidden;
+}
+
+/* Scroll-lit words: muted (still readable) until lit, then text or accent. */
+.motion [data-word] {
+  color: var(--text-muted);
+  transition: color 0.35s var(--ease-out);
+}
+
+.motion [data-word].is-lit {
+  color: var(--text);
+}
+
+.motion em [data-word].is-lit {
+  color: var(--accent);
+}
+
+/* The status square breathes. */
+@keyframes status-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.motion .status-dot {
+  animation: status-pulse 2.4s ease-in-out infinite;
+}
+
+/* 3D hero layer fades in once its first frame is drawn. */
+.hero-scene {
+  opacity: 0;
+}
+
+.hero-scene.is-ready {
+  opacity: 1;
+}
+
+.motion .hero-scene {
+  transition: opacity 1.6s var(--ease-out);
+}
+
+/* Custom cursor: the native one is hidden only while the custom one runs. */
+.has-cursor,
+.has-cursor * {
+  cursor: none;
+}
+
+/* Loading screen: first visit of a session only (see src/lib/motion.ts). Entrances
+   wait, paused at their first frame, until it lifts. */
+.loader {
+  display: none;
+}
+
+.is-loading .loader {
+  display: flex;
+}
+
+html.is-loading {
+  overflow: hidden;
+}
+
+.is-loading .enter-line,
+.is-loading .enter-fade {
+  animation-play-state: paused;
+}
+
+/* Links: a red line draws over the grey underline on hover. */
+.link {
+  position: relative;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Portrait: rises out of its frame while the photo settles from a slight zoom. */
+@keyframes enter-zoom {
+  from {
+    transform: scale(1.25);
+  }
+}
+
+.motion .enter-zoom {
+  animation: enter-zoom 1.6s var(--ease-out) both;
+  animation-delay: calc(var(--enter-delay, 0s) + var(--d, 0ms));
+}
+
+.is-loading .enter-zoom {
+  animation-play-state: paused;
+}
