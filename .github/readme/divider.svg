@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 14" width="960" height="14" role="img" aria-label="">
+<style>@keyframes run{from{transform:translateX(-480px)}to{transform:translateX(480px)}}.run{animation:run 6s steps(48,end) infinite}@media (prefers-reduced-motion:reduce){.run{animation:none}}</style>
+<path d="M0 7.5H960" stroke="#8E897F" stroke-opacity=".6" stroke-dasharray="1 3"/>
+<g class="run"><rect x="477" y="4" width="6" height="6" fill="#FF4130"/></g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 250" width="960" height="250" role="img" aria-label="NOIR/OS asleep: one breathing red circle. Move the mouse or press any key.">
+<title>NOIR/OS asleep: one breathing red circle. Move the mouse or press any key.</title>
+<defs>
+<clipPath id="screen"><rect width="960" height="250" rx="14"/></clipPath>
+
+
+</defs>
+<style>.mono{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono','Liberation Mono',monospace;white-space:pre}
+.fb{transform-box:fill-box;transform-origin:center}.fl{transform-box:fill-box;transform-origin:left center}.fr{transform-box:fill-box;transform-origin:right center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}.f-b{fill:#0B0B0A}.s-b{stroke:#0B0B0A}.f-f{fill:#141413}.s-f{stroke:#141413}.f-t{fill:#ECE8DF}.s-t{stroke:#ECE8DF}.f-s{fill:#BDB8AD}.s-s{stroke:#BDB8AD}.f-u{fill:#8E897F}.s-u{stroke:#8E897F}.f-r{fill:#2A2926}.s-r{stroke:#2A2926}.f-a{fill:#FF4130}.s-a{stroke:#FF4130}@keyframes bc{50%{opacity:.55;transform:scale(.86)}}.br{animation:bc 4.8s ease-in-out infinite}</style>
+<g clip-path="url(#screen)">
+<rect width="960" height="250" class="f-b"/>
+<g class="br fb"><circle cx="480" cy="104" r="56" class="f-a"/></g><text class="mono f-u" x="480" y="218" font-size="9.5" text-anchor="middle" letter-spacing="1.2" xml:space="preserve">MOVE THE MOUSE OR PRESS ANY KEY</text>
+</g>
+<rect x=".5" y=".5" width="959" height="249" rx="13.5" fill="none" class="s-r"/>
+</svg>
