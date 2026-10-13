@@ -3,14 +3,16 @@ export type RichText = (string | { em: string })[];
 
 export const site = {
   name: "Aakash Buddha Kannan",
-  shortName: "Aakash B.K.",
   handle: "Aakashxnoir",
+  host: "noir-system",
+  os: "NOIR/OS",
   location: "Chennai, India",
   email: "aakashb.kannan@gmail.com",
   linkedin: "https://www.linkedin.com/in/aakashbuddhakannan",
   github: "https://github.com/Aakashxnoir",
   resume: "/Aakash_Buddha_Kannan_Resume.pdf",
   status: "Open to internships",
+  timeZone: "Asia/Kolkata",
 } as const;
 
 /**
@@ -24,73 +26,171 @@ export const siteUrl =
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : "http://localhost:3000");
 
-export const nav = [
-  { label: "Work", href: "/work" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-] as const;
+export type AppId = "work" | "timeline" | "about" | "contact";
+
+/** The four desktop apps, in corner order: top left, top right, bottom left, bottom right. */
+export const apps: {
+  id: AppId;
+  number: string;
+  file: string;
+  title: string;
+  href: string;
+  blurb: string;
+}[] = [
+  {
+    id: "work",
+    number: "01",
+    file: "projects.vol",
+    title: "Projects",
+    href: "/work",
+    blurb: "Five case files",
+  },
+  {
+    id: "timeline",
+    number: "02",
+    file: "timeline.log",
+    title: "Timeline",
+    href: "/timeline",
+    blurb: "git log of the path so far",
+  },
+  {
+    id: "about",
+    number: "03",
+    file: "profile.sys",
+    title: "Profile",
+    href: "/about",
+    blurb: "Roles, stack, education",
+  },
+  {
+    id: "contact",
+    number: "04",
+    file: "contact.app",
+    title: "Contact",
+    href: "/contact",
+    blurb: "New message",
+  },
+];
+
+export function getApp(id: AppId) {
+  return apps.find((app) => app.id === id)!;
+}
+
+export const desktop = {
+  role: "Full-stack · ML · Quantum",
+  name: "Aakash Buddha Kannan",
+  line: "Third-year computer science student building full-stack, machine learning and quantum-optimization products for real problems.",
+  education: "B.E. Computer Science · Rajalakshmi Institute of Technology · 2024 to 2028",
+  enter: "Enter",
+  /** Background-removed cut of public/images/aakash.jpg (its own size). */
+  portrait: {
+    src: "/images/portrait.png",
+    alt: "Aakash Buddha Kannan in a black sweater, smiling and looking to the side",
+    width: 540,
+    height: 418,
+  },
+} as const;
 
 /** Functional interface labels. */
 export const labels = {
   resume: "Résumé",
   downloadResume: "Download résumé",
   resumePdf: "Résumé (PDF)",
-  viewWork: "View work",
-  viewAllWork: "View all work",
-  readCase: "Read case",
-  backToWork: "Back to all work",
-  nextCase: "Next case",
   github: "GitHub",
   linkedin: "LinkedIn",
   email: "Email",
-  home: "Home",
+  copyEmail: "Copy email",
+  copied: "Copied",
+  home: "Back to desktop",
+  desktop: "~/desktop",
   skipToContent: "Skip to content",
-  loading: "Loading",
-  case: "Case",
-  stack: "Stack",
-  education: "Education",
-  notFound: "Page not found",
+  escBack: "ESC - back to desktop",
+  escClose: "ESC - close project",
+  escUp: "ESC - back",
+  notFound: "File not found",
+  notFoundBody: "No such file or directory. It may have moved, or it never existed.",
+  status: "open to internships",
+  noJs: "Needs JavaScript.",
+  errorLog: "error.log",
+  menuBar: "Menu bar",
+  path: "Path",
+  appsNav: "Apps",
 } as const;
 
-export const hero = {
-  label: "Portfolio 2026 / Chennai, IN",
-  name: { first: "Aakash", last: "Buddha Kannan" },
-  line: "Third-year computer science student building full-stack, machine learning and quantum-optimization products for real problems.",
+/** Menu bar menus. Items that need JS are marked and hidden without it. */
+export const menus = {
+  file: {
+    label: "File",
+    open: "Open",
+    newMessage: "New message",
+    resume: "Open résumé.pdf",
+    copyEmail: "Copy email address",
+    github: "GitHub",
+    linkedin: "LinkedIn",
+  },
+  extras: {
+    label: "Extras",
+    cartridge: "Insert a cartridge",
+    terminal: "Terminal",
+    lightsOut: "Lights Out",
+    lightsOutNote: "F1 start",
+    surprise: "Surprise me",
+  },
+  system: {
+    label: "System",
+    phosphor: "Phosphor",
+    phosphors: [
+      { id: "noir", label: "Noir" },
+      { id: "amber", label: "Amber" },
+      { id: "green", label: "Green" },
+    ],
+    crt: "CRT effect",
+    motion: "Motion",
+    sleep: "Sleep",
+    about: "About this site",
+    aboutBody:
+      "NOIR/OS v3. Built with Next.js, TypeScript, Tailwind CSS, GSAP and Lenis. The project artworks are drawn live in glyphs on a canvas. Type set in Doto and JetBrains Mono.",
+  },
 } as const;
 
-export const workSection = {
-  label: "Work",
-  heading: "Selected work",
-} as const;
+export type Phosphor = (typeof menus.system.phosphors)[number]["id"];
 
-/** Case study section headings and fact labels. */
-export const caseLabels = {
-  overview: "Overview",
-  built: "What I built",
-  problem: "Problem",
-  outcome: "Outcome",
-  media: "Screens",
-  year: "Year",
-  role: "Role",
-  team: "Team",
-  stack: "Stack",
-  links: "Links",
-  caseNav: "Case files",
-} as const;
-
-export const contact: { label: string; heading: RichText } = {
+export const contact: {
+  label: string;
+  heading: RichText;
+  window: string;
+  to: string;
+  from: string;
+  fromPlaceholder: string;
+  subject: string;
+  subjects: string[];
+  message: string;
+  messagePlaceholder: string;
+  send: string;
+  sendNote: string;
+  availability: string;
+  elsewhere: string;
+} = {
   label: "Contact",
   heading: ["Have a problem worth ", { em: "solving?" }, " File it with me."],
+  window: "contact.app - new message",
+  to: "To",
+  from: "From",
+  fromPlaceholder: "you@company.com",
+  subject: "Subject",
+  subjects: ["Internship", "Project", "Just saying hi"],
+  message: "Message",
+  messagePlaceholder:
+    "Hi Aakash, we're working on... Here's what we need, the team and the timeline...",
+  send: "Send message",
+  sendNote: "Opens your mail app. Nothing is stored here.",
+  availability: "Open to internships · Chennai, IST (UTC+5:30)",
+  elsewhere: "Elsewhere",
 };
 
 /** Open Graph share image copy. */
 export const share = {
   tagline: "Full-stack · Machine learning · Quantum optimization",
   alt: "Aakash Buddha Kannan, portfolio. Full-stack, machine learning and quantum optimization. Open to internships.",
-} as const;
-
-export const footer = {
-  copyright: "© 2026 Aakash Buddha Kannan",
 } as const;
 
 /** Flattens rich copy to plain text (for metadata). */

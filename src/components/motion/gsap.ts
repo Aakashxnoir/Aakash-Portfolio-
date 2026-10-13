@@ -1,12 +1,29 @@
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
+import type { gsap as Gsap } from "gsap";
+import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+export type Motion = { gsap: typeof Gsap; ScrollTrigger: typeof ScrollTriggerType };
 
-/** Reveal easing, matching --ease-out in globals.css. */
-export const EASE_OUT = "expo.out";
-/** Curtain easing. */
-export const EASE_IN_OUT = "power3.inOut";
+let loaded: Motion | null = null;
+let loading: Promise<Motion> | null = null;
 
-export { gsap, ScrollTrigger, SplitText };
+/**
+ * GSAP with ScrollTrigger and ScrambleText, loaded after first paint so they
+ * stay out of the initial bundle. Resolves to the same instance every time.
+ */
+export function loadMotion(): Promise<Motion> {
+  loading ??= Promise.all([
+    import("gsap"),
+    import("gsap/ScrollTrigger"),
+    import("gsap/ScrambleTextPlugin"),
+  ]).then(([{ gsap }, { ScrollTrigger }, { ScrambleTextPlugin }]) => {
+    gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin);
+    loaded = { gsap, ScrollTrigger };
+    return loaded;
+  });
+  return loading;
+}
+
+/** The loaded libraries, or null before loadMotion() has finished. */
+export function motionLibs() {
+  return loaded;
+}

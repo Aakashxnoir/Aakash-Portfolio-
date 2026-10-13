@@ -1,78 +1,116 @@
 import type { Metadata } from "next";
+import SpecTable from "@/components/case/SpecTable";
 import Image from "next/image";
-import Section, { FactRows } from "@/components/Section";
-import Container from "@/components/Container";
-import PageHeader from "@/components/PageHeader";
-import RecognitionList from "@/components/RecognitionList";
-import Rich from "@/components/Rich";
-import { enterDelay } from "@/components/motion/enter";
-import { about, education, outside, recognition, stack } from "@/content/about";
-import { richToString } from "@/content/site";
+import LitText from "@/components/motion/LitText";
+import Neofetch from "@/components/profile/Neofetch";
+import PathBar from "@/components/shell/PathBar";
+import Window from "@/components/shell/Window";
+import { education, profile, recognition, roles, rolesLabel, stack } from "@/content/profile";
+import { getApp, richToString } from "@/content/site";
+
+const app = getApp("about");
 
 export const metadata: Metadata = {
-  title: "About",
-  description: richToString(about.statement),
+  title: profile.title,
+  description: richToString(profile.statement),
 };
 
-export default function AboutPage() {
+export default function ProfilePage() {
   return (
-    <Container>
-      <PageHeader label={about.label}>
-        <div className="mt-10 grid grid-cols-12 gap-x-8">
-          <div className="col-span-7">
-            <h1 className="enter-fade text-statement font-light text-text" style={enterDelay(100)}>
-              <Rich text={about.statement} />
-            </h1>
-            <p
-              className="enter-fade mt-10 max-w-[560px] text-body text-text-soft"
-              style={enterDelay(250)}
-            >
-              {about.body}
-            </p>
-          </div>
-          {/* The frame is the mask: the photo rises into it and settles from a slight zoom. */}
-          <div className="relative col-span-4 col-start-9 aspect-[4/5] overflow-hidden border border-rule bg-surface">
-            <div className="enter-line absolute inset-0" style={enterDelay(250)}>
-              <div className="enter-zoom absolute inset-0" style={enterDelay(250)}>
-                <Image
-                  src={about.portrait.src}
-                  alt={about.portrait.alt}
-                  fill
-                  priority
-                  sizes="(min-width: 1440px) 420px, 30vw"
-                  className="noir-portrait object-cover"
-                />
-              </div>
+    <Window>
+      <div className="pt-path">
+        <PathBar trail={[{ label: app.file }]} />
+
+        <section className="grid gap-10 px-read pt-14 pb-20 md:grid-cols-12 md:gap-6">
+          <div className="md:col-span-5">
+            <div className="relative aspect-square overflow-hidden border border-rule bg-surface">
+              <Image
+                src={profile.portrait.src}
+                alt={profile.portrait.alt}
+                fill
+                priority
+                sizes="(min-width: 768px) 40vw, 100vw"
+                className="object-cover"
+              />
             </div>
           </div>
-        </div>
-      </PageHeader>
+          <div className="md:col-span-6 md:col-start-7 md:pt-4">
+            <p className="type-label text-text-muted">
+              <span className="text-accent">{app.number}</span> · {app.file}
+            </p>
+            <h1 data-scramble className="type-display mt-3 text-title text-text">
+              {profile.title}
+            </h1>
+            <p data-lit className="mt-10 text-statement text-text">
+              <LitText text={profile.statement} />
+            </p>
+            <p className="mt-8 max-w-[58ch] text-lead text-text-soft">{profile.body}</p>
+          </div>
+        </section>
 
-      <Section id="education-heading" heading={education.heading}>
-        <FactRows
-          rows={[
-            { label: education.degree, value: `${education.school}, ${education.place}` },
-            { label: education.yearsLabel, value: education.years },
-          ]}
-        />
-      </Section>
+        <section aria-label={rolesLabel} className="border-t border-rule">
+          {roles.map((role, index) => (
+            <article
+              key={role.title}
+              data-reveal
+              className="grid gap-6 border-b border-rule px-read py-16 md:grid-cols-12"
+            >
+              <p className="type-label text-accent md:col-span-1">
+                {String(index + 1).padStart(2, "0")}
+              </p>
+              <div className="md:col-span-10">
+                <h2 data-scramble className="type-display text-heading text-text">
+                  {role.title}
+                </h2>
+                <p className="mt-6 max-w-[62ch] text-lead text-text-soft">{role.body}</p>
+                <ul className="mt-6 flex flex-wrap gap-2">
+                  {role.tags.map((tag) => (
+                    <li key={tag} className="tag">
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          ))}
+        </section>
 
-      <Section id="recognition-heading" heading={recognition.heading}>
-        <RecognitionList />
-      </Section>
+        <section className="grid gap-16 px-read py-20 md:grid-cols-12 md:gap-6">
+          <div data-reveal className="md:col-span-5">
+            <h2 className="type-label text-text-muted">{education.heading}</h2>
+            <p className="type-display mt-4 text-[32px] leading-none text-text">
+              {education.degree}
+            </p>
+            <SpecTable
+              className="mt-6"
+              rows={[
+                { label: education.labels.school, value: education.school },
+                { label: education.labels.place, value: education.place },
+                { label: education.labels.years, value: education.years },
+              ]}
+            />
+          </div>
+          <div data-reveal className="md:col-span-6 md:col-start-7">
+            <h2 className="type-label text-text-muted">{recognition.heading}</h2>
+            <ul className="mt-4">
+              {recognition.items.map((item) => (
+                <li
+                  key={item.detail}
+                  className="grid grid-cols-[9rem_1fr] gap-4 border-b border-rule py-4"
+                >
+                  <span className="text-accent">{item.title}</span>
+                  <span className="text-text-soft">{item.detail}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
-      <Section id="stack-heading" heading={stack.heading}>
-        <FactRows
-          rows={stack.groups.map((group) => ({
-            label: group.label,
-            value: group.items.join(", "),
-          }))}
-        />
-      </Section>
-
-      <Section id="outside-heading" heading={outside.heading}>
-        <FactRows rows={outside.items} />
-      </Section>
-    </Container>
+        <section data-reveal className="px-read pb-24">
+          <h2 className="type-label mb-4 text-text-muted">{stack.heading}</h2>
+          <Neofetch />
+        </section>
+      </div>
+    </Window>
   );
 }

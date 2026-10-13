@@ -1,37 +1,35 @@
 import type { Metadata } from "next";
-import { Archivo, JetBrains_Mono } from "next/font/google";
-import "lenis/dist/lenis.css";
-import Footer from "@/components/Footer";
-import Nav from "@/components/Nav";
-import Cursor from "@/components/motion/Cursor";
-import Loader from "@/components/motion/Loader";
-import MotionRoot from "@/components/motion/MotionRoot";
-import PageTransition from "@/components/motion/PageTransition";
-import { hero, labels, site, siteUrl } from "@/content/site";
-import { motionInitScript } from "@/lib/motion";
+import { Doto, JetBrains_Mono } from "next/font/google";
+import Extras from "@/components/extras/Extras";
+import Boot from "@/components/motion/Boot";
+import MotionController from "@/components/motion/Motion";
+import SmoothScroll from "@/components/motion/SmoothScroll";
+import MenuBar from "@/components/shell/MenuBar";
+import MenuController from "@/components/shell/MenuController";
+import WindowOrigin from "@/components/shell/WindowOrigin";
+import { desktop, labels, site, siteUrl } from "@/content/site";
+import { prefsInitScript } from "@/lib/prefs";
 import "./globals.css";
 
-// Variable weight and width: one file per style covers the condensed display
-// cuts and the normal-width body text.
-const archivo = Archivo({
-  variable: "--font-archivo",
+// Variable weight plus the dot-roundness axis.
+const doto = Doto({
+  variable: "--font-doto",
   subsets: ["latin"],
-  axes: ["wdth"],
-  style: ["normal", "italic"],
+  axes: ["ROND"],
   display: "swap",
 });
 
 const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: `${site.name} | Portfolio`, template: `%s | ${site.name}` },
-  description: hero.line,
+  title: { default: `${site.name} | ${site.os}`, template: `%s | ${site.name}` },
+  description: desktop.line,
   openGraph: { type: "website", siteName: site.name },
   twitter: { card: "summary_large_image" },
 };
@@ -40,29 +38,31 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      // The head script adds the `motion` class before hydration.
+      // The head script sets the phosphor, CRT, motion and boot attributes before hydration.
       suppressHydrationWarning
-      className={`${archivo.variable} ${jetbrains.variable}`}
+      className={`${doto.variable} ${jetbrains.variable}`}
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: motionInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: prefsInitScript }} />
       </head>
-      <body className="flex min-h-screen flex-col">
+      <body className="min-h-svh">
         <a
           href="#main"
-          className="type-label fixed left-page top-4 z-50 -translate-y-24 bg-bg px-3 py-2 text-text focus:translate-y-0"
+          className="type-label fixed top-2 left-2 z-[70] -translate-y-24 bg-accent px-3 py-2 text-bg focus:translate-y-0"
         >
           {labels.skipToContent}
         </a>
-        <MotionRoot />
-        <Loader />
-        <Nav />
-        <main id="main" className="flex-1">
+        <MenuBar />
+        <main id="main" className="pt-bar">
           {children}
         </main>
-        <Footer />
-        <PageTransition />
-        <Cursor />
+        <Boot />
+        <Extras />
+        <div className="crt" aria-hidden />
+        <MenuController />
+        <WindowOrigin />
+        <SmoothScroll />
+        <MotionController />
       </body>
     </html>
   );

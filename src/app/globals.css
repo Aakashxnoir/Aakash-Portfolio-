@@ -1,31 +1,59 @@
 @import "tailwindcss";
 
-/* `fx:` styles apply only while motion is on (see src/lib/motion.ts). */
+/* `fx:` styles apply only while motion is on (see src/lib/prefs.ts). */
 @custom-variant fx (&:where(.motion, .motion *));
+/* `js:` styles apply once the head script has run. */
+@custom-variant js (&:where(.js, .js *));
 
 /*
  * Design tokens. Source of truth: docs/DESIGN_SYSTEM.md.
- * One theme (Noir). Components use the Tailwind utilities below (bg-bg,
- * text-text-soft, border-rule, text-accent, ...), never raw hex values.
+ * Three phosphors, switched by html[data-phosphor]. Components use the Tailwind
+ * utilities below (bg-bg, text-text-soft, border-rule, text-accent, ...).
  */
 :root {
   color-scheme: dark;
 
-  --bg: #0a0a0a;
-  --surface: #141414;
-  --text: #ededed;
-  --text-soft: #b8b8b8;
-  --text-muted: #8f8f8f;
-  /* Decorative only: 3.7:1, never for text that must be read. */
-  --text-faint: #6b6b6b;
-  --rule: #2a2a2a;
-  --accent: #ff3d2e;
+  --bg: #0b0b0a;
+  --surface: #141413;
+  --text: #ece8df;
+  --text-soft: #bdb8ad;
+  --text-muted: #8e897f;
+  --rule: #2a2926;
+  --accent: #ff4130;
 
-  --page-x: 80px;
-  --nav-height: 88px;
-  --section-gap: 180px;
+  --bar-height: 40px;
+  --path-height: 32px;
+  --shell-x: 32px;
+  --read-x: 80px;
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root[data-phosphor="amber"] {
+  --bg: #17110c;
+  --surface: #211912;
+  --text: #f4cb98;
+  --text-soft: #d9ae7e;
+  --text-muted: #a98760;
+  --rule: #3b2d20;
+  --accent: #ff6b35;
+}
+
+:root[data-phosphor="green"] {
+  --bg: #070f0a;
+  --surface: #0d1811;
+  --text: #b9f4c4;
+  --text-soft: #93d2a0;
+  --text-muted: #6fa27b;
+  --rule: #1e3325;
+  --accent: #ff5544;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --shell-x: 16px;
+    --read-x: 16px;
+  }
 }
 
 @theme inline {
@@ -34,37 +62,37 @@
   --color-text: var(--text);
   --color-text-soft: var(--text-soft);
   --color-text-muted: var(--text-muted);
-  --color-text-faint: var(--text-faint);
   --color-rule: var(--rule);
   --color-accent: var(--accent);
 
-  --font-sans: var(--font-archivo), "Helvetica Neue", sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-display: var(--font-doto), var(--font-jetbrains), monospace;
 
-  /* Type scale: the 1440 value, scaling down with the viewport to 1280. */
-  --text-hero: min(14.4vw, 13rem);
-  --text-hero--line-height: 0.82;
-  --text-title: min(11.1vw, 10rem);
-  --text-title--line-height: 0.85;
-  --text-row: min(8.3vw, 7.5rem);
-  --text-row--line-height: 0.85;
-  --text-contact: min(8.9vw, 8rem);
-  --text-contact--line-height: 0.9;
-  --text-section: min(6.1vw, 5.5rem);
-  --text-section--line-height: 0.9;
-  --text-statement: min(3.9vw, 3.5rem);
-  --text-statement--line-height: 1.12;
-  --text-lead: 1.375rem;
-  --text-lead--line-height: 1.5;
-  --text-body: 1.125rem;
-  --text-body--line-height: 1.65;
-  --text-label: 0.75rem;
+  /* Type scale: the 1440 value, scaling down with the viewport. */
+  --text-name: clamp(2.75rem, 7.6vw, 7rem);
+  --text-name--line-height: 0.9;
+  --text-title: clamp(3rem, 8.4vw, 7.5rem);
+  --text-title--line-height: 0.9;
+  --text-heading: clamp(2.5rem, 5vw, 4.5rem);
+  --text-heading--line-height: 0.95;
+  --text-tile: 1.75rem;
+  --text-tile--line-height: 1;
+  --text-statement: clamp(1.5rem, 2.5vw, 2.25rem);
+  --text-statement--line-height: 1.3;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.6;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.7;
+  --text-ui: 0.8125rem;
+  --text-ui--line-height: 1.4;
+  --text-label: 0.6875rem;
   --text-label--line-height: 1.4;
-  --text-label--letter-spacing: 0.16em;
+  --text-label--letter-spacing: 0.12em;
 
-  --spacing-page: var(--page-x);
-  --spacing-nav: var(--nav-height);
-  --spacing-section: var(--section-gap);
+  --spacing-bar: var(--bar-height);
+  --spacing-path: var(--path-height);
+  --spacing-shell: var(--shell-x);
+  --spacing-read: var(--read-x);
 
   --ease-out: var(--ease-out);
 }
@@ -72,17 +100,36 @@
 html {
   background: var(--bg);
   scrollbar-gutter: stable;
+  scrollbar-color: var(--text-muted) var(--bg);
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-sans);
-  font-weight: 300;
+  font-family: var(--font-mono);
   font-size: var(--text-body);
-  line-height: 1.65;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor:
+    url("/cursors/arrow.svg") 1 1,
+    default;
+}
+
+a,
+button,
+summary,
+label,
+select,
+[role="button"] {
+  cursor:
+    url("/cursors/hand.svg") 9 1,
+    pointer;
+}
+
+input,
+textarea {
+  cursor: text;
 }
 
 ::selection {
@@ -92,18 +139,24 @@ body {
 
 :focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 4px;
+  outline-offset: 3px;
 }
 
-/* Condensed uppercase display type: names, titles, headings. Weight is set per use. */
+/* JS-only controls stay out of the page until the head script has run. */
+html:not(.js) .js-only {
+  display: none !important;
+}
+
+/* Dot-matrix display type: names, titles, headings. */
 @utility type-display {
-  font-family: var(--font-sans);
-  font-stretch: 62%;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-variation-settings: "ROND" 100;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
-/* Mono label: uppercase, tracked. Size and tracking come from text-label. */
+/* Mono label: uppercase, tracked. */
 @utility type-label {
   font-family: var(--font-mono);
   font-size: var(--text-label);
@@ -113,178 +166,391 @@ body {
   text-transform: uppercase;
 }
 
-/* Text link: 1px underline in --rule; text and underline go red on hover. */
+/* Text link: 1px underline in --rule; text and underline go accent on hover. */
 @utility link {
   color: var(--text);
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 4px;
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
   transition:
-    color 0.4s var(--ease-out),
-    border-color 0.4s var(--ease-out);
+    color 0.2s,
+    text-decoration-color 0.2s;
 
   &:hover {
     color: var(--accent);
-    border-bottom-color: var(--accent);
+    text-decoration-color: var(--accent);
   }
 }
 
-/* Primary action: 1px red underline; text goes red on hover. */
-@utility link-primary {
+/* Bordered mono button; fills on hover. */
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  border: 1px solid var(--text-muted);
+  padding: 0.55em 0.9em;
+  font-size: var(--text-ui);
+  line-height: 1.2;
   color: var(--text);
-  border-bottom: 1px solid var(--accent);
-  padding-bottom: 4px;
-  transition: color 0.4s var(--ease-out);
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 
   &:hover {
-    color: var(--accent);
+    background: var(--text);
+    border-color: var(--text);
+    color: var(--bg);
   }
 }
 
-/* Portrait: black and white, hard contrast. */
-.noir-portrait {
-  filter: grayscale(1) contrast(1.2) brightness(0.85);
+@utility btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+
+  &:hover {
+    background: var(--text);
+    border-color: var(--text);
+  }
+}
+
+/* Accent-bordered tag. */
+@utility tag {
+  display: inline-block;
+  border: 1px solid var(--accent);
+  padding: 0.3em 0.6em;
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+/* Dotted leader between a spec label and its value. */
+.leader {
+  flex: 1;
+  min-width: 1.5rem;
+  border-bottom: 1px dotted var(--text-muted);
+  transform: translateY(-0.35em);
+}
+
+/* The breathing status square. */
+@keyframes breathe {
+  50% {
+    opacity: 0.25;
+  }
+}
+.motion .breathe {
+  animation: breathe 2.4s ease-in-out infinite;
 }
 
 /* ---------------------------------------------------------------------------
- * Motion. Everything below applies only while <html> has `motion` (set before
- * first paint when the visitor allows motion). Without JS or under reduced
- * motion none of it applies and every page is complete and still.
+ * CRT: scanlines, vignette and the monitor's rounded corners. Decorative, never
+ * takes pointer events, off with System > CRT effect.
  * ------------------------------------------------------------------------- */
-
-/* A line that rises out of its mask. Clips at the line box, with room for descenders. */
-.mask {
-  display: block;
-  overflow: hidden;
-  padding-bottom: 0.06em;
-  margin-bottom: -0.06em;
+.crt {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
 }
-
-@keyframes enter-rise {
-  from {
-    transform: translateY(105%);
-  }
-}
-
-@keyframes enter-fade {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-}
-
-/* First-paint entrances (CSS only, so they never wait for JS). --enter-delay is set
-   by the page transition so a new page's entrance plays as the curtain lifts. */
-.motion .enter-line {
-  animation: enter-rise 1.1s var(--ease-out) both;
-  animation-delay: calc(var(--enter-delay, 0s) + var(--d, 0ms));
-}
-
-.motion .enter-fade {
-  animation: enter-fade 0.9s var(--ease-out) both;
-  animation-delay: calc(var(--enter-delay, 0s) + var(--d, 0ms));
-}
-
-/* Scroll reveals start hidden; Reveal shows them as they enter view. */
-.motion [data-reveal] {
-  visibility: hidden;
-}
-
-/* Scroll-lit words: muted (still readable) until lit, then text or accent. */
-.motion [data-word] {
-  color: var(--text-muted);
-  transition: color 0.35s var(--ease-out);
-}
-
-.motion [data-word].is-lit {
-  color: var(--text);
-}
-
-.motion em [data-word].is-lit {
-  color: var(--accent);
-}
-
-/* The status square breathes. */
-@keyframes status-pulse {
-  50% {
-    opacity: 0.3;
-  }
-}
-
-.motion .status-dot {
-  animation: status-pulse 2.4s ease-in-out infinite;
-}
-
-/* 3D hero layer fades in once its first frame is drawn. */
-.hero-scene {
-  opacity: 0;
-}
-
-.hero-scene.is-ready {
-  opacity: 1;
-}
-
-.motion .hero-scene {
-  transition: opacity 1.6s var(--ease-out);
-}
-
-/* Custom cursor: the native one is hidden only while the custom one runs. */
-.has-cursor,
-.has-cursor * {
-  cursor: none;
-}
-
-/* Loading screen: first visit of a session only (see src/lib/motion.ts). Entrances
-   wait, paused at their first frame, until it lifts. */
-.loader {
-  display: none;
-}
-
-.is-loading .loader {
-  display: flex;
-}
-
-html.is-loading {
-  overflow: hidden;
-}
-
-.is-loading .enter-line,
-.is-loading .enter-fade {
-  animation-play-state: paused;
-}
-
-/* Links: a red line draws over the grey underline on hover. */
-.link {
-  position: relative;
-}
-
-.link::after {
+.crt::before {
   content: "";
   position: absolute;
-  inset: auto 0 -1px;
-  height: 1px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.5s var(--ease-out);
+  inset: 0;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 2px, rgb(0 0 0 / 0.14) 2px 3px),
+    radial-gradient(ellipse at center, transparent 62%, rgb(0 0 0 / 0.42) 100%);
 }
-
-.link:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
+.crt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  box-shadow: 0 0 0 24px #000;
 }
-
-/* Portrait: rises out of its frame while the photo settles from a slight zoom. */
-@keyframes enter-zoom {
-  from {
-    transform: scale(1.25);
+:root[data-crt="off"] .crt::before {
+  display: none;
+}
+@media (max-width: 767px) {
+  .crt::after {
+    display: none;
   }
 }
 
-.motion .enter-zoom {
-  animation: enter-zoom 1.6s var(--ease-out) both;
-  animation-delay: calc(var(--enter-delay, 0s) + var(--d, 0ms));
+/* Lenis smooth scroll (from lenis/dist/lenis.css). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
-.is-loading .enter-zoom {
-  animation-play-state: paused;
+/* ---------------------------------------------------------------------------
+ * Boot screen (src/components/motion/Boot.tsx). Shown only while <html> has
+ * `boot`; under the menu bar, over the page. With motion the screen powers on
+ * from a line and opens from the middle when loading is done; without it, it
+ * just fades. If the script never runs, the failsafe hides it after 4s.
+ * ------------------------------------------------------------------------- */
+.boot-layer {
+  display: none;
+}
+html.boot .boot-layer {
+  display: block;
+  position: fixed;
+  inset: var(--bar-height) 0 0;
+  z-index: 45;
+  overflow: hidden;
+  transition: opacity 0.3s;
+  animation: boot-failsafe 0.01s linear 4s forwards;
+}
+@keyframes boot-failsafe {
+  to {
+    visibility: hidden;
+  }
+}
+.boot-half {
+  position: absolute;
+  inset-inline: 0;
+  height: 50.5%;
+  background: var(--bg);
+}
+.boot-half-top {
+  top: 0;
+}
+.boot-half-bottom {
+  bottom: 0;
+}
+.boot-screen {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.15s;
+}
+.boot-step {
+  opacity: 0;
+}
+.boot-step[data-done] {
+  opacity: 1;
+}
+.boot-power {
+  display: none;
+}
+.boot-layer[data-exit] .boot-screen {
+  opacity: 0;
+}
+html:not(.motion) .boot-layer[data-exit] {
+  opacity: 0;
+}
+.motion .boot-screen {
+  animation: boot-in 0.2s 0.25s both;
+}
+.motion .boot-half {
+  transition: transform 0.55s cubic-bezier(0.7, 0, 0.2, 1);
+}
+.motion .boot-layer[data-exit] .boot-half-top {
+  transform: translateY(-100%);
+}
+.motion .boot-layer[data-exit] .boot-half-bottom {
+  transform: translateY(100%);
+}
+.motion .boot-power {
+  display: block;
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--text);
+  opacity: 0;
+  animation: boot-power 0.5s var(--ease-out) both;
+}
+.motion .boot-layer[data-exit] .boot-power {
+  animation: boot-seam 0.4s ease-out both;
+}
+@keyframes boot-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes boot-power {
+  0% {
+    opacity: 1;
+    transform: scaleX(0);
+  }
+  45% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1) scaleY(60);
+  }
+}
+@keyframes boot-seam {
+  0% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Windows: route view transitions (src/components/shell/Window.tsx). Opening
+ * grows the new window from where it was opened; closing shrinks the old one to
+ * its desktop corner. The menu bar stays put. Off without motion.
+ * ------------------------------------------------------------------------- */
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+::view-transition-group(menubar) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(menubar) {
+  display: none;
+}
+::view-transition-new(menubar) {
+  animation: none;
+}
+::view-transition-group(.win-open),
+::view-transition-group(.win-close) {
+  z-index: 1;
+}
+::view-transition-new(.win-open) {
+  transform-origin: var(--win-open-x, 50%) var(--win-open-y, 50%);
+  animation: win-grow 0.5s var(--ease-out) both;
+}
+::view-transition-old(.win-behind) {
+  animation: win-out 0.3s ease-in both;
+}
+::view-transition-old(.win-close) {
+  transform-origin: var(--win-close-x, 50%) var(--win-close-y, 50%);
+  animation: win-shrink 0.38s cubic-bezier(0.55, 0, 0.75, 0.3) both;
+}
+::view-transition-new(.win-under) {
+  animation: win-fade 0.3s 0.12s var(--ease-out) both;
+}
+@keyframes win-grow {
+  from {
+    opacity: 0;
+    transform: scale(0.06);
+  }
+  35% {
+    opacity: 1;
+  }
+}
+@keyframes win-shrink {
+  65% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.06);
+  }
+}
+@keyframes win-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes win-out {
+  to {
+    opacity: 0;
+  }
+}
+:root:not(.motion)::view-transition-group(*),
+:root:not(.motion)::view-transition-old(*),
+:root:not(.motion)::view-transition-new(*) {
+  animation: none !important;
+}
+
+/* Scroll-lit statement (LitText): words go from muted to full as --lit runs 0 to 1. */
+.motion [data-lit] [data-word] {
+  color: color-mix(in srgb, var(--word, var(--text)) calc(var(--lit, 0) * 100%), var(--text-muted));
+}
+.motion [data-lit] em [data-word] {
+  --word: var(--accent);
+}
+
+/* ---------------------------------------------------------------------------
+ * timeline.log. A plain list by default; with motion from 768px the panel fills
+ * the screen and the cards run sideways (TimelineScroller pins and drives it;
+ * until it does, the row scrolls on its own).
+ * ------------------------------------------------------------------------- */
+.tl-ring {
+  opacity: 0;
+}
+[data-commit][data-active] .tl-ring {
+  opacity: 1;
+}
+[data-commit][data-active] .tl-node {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+@media (min-width: 768px) {
+  .motion .tl {
+    display: flex;
+    flex-direction: column;
+    height: calc(100svh - var(--bar-height) - var(--path-height));
+    min-height: 560px;
+    background: var(--bg);
+  }
+  .motion .tl-viewport {
+    flex: 1;
+    min-height: 0;
+    overflow-x: auto;
+  }
+  .motion .tl[data-pinned] .tl-viewport {
+    overflow: hidden;
+  }
+  .motion .tl-track {
+    display: flex;
+    width: max-content;
+    height: 100%;
+    padding-bottom: 0;
+  }
+  .motion .tl-card {
+    flex: none;
+    width: min(40rem, 52vw);
+    border-left: 1px solid var(--rule);
+    padding: 0 2.5rem 2rem;
+    transition: border-color 0.3s;
+  }
+  .motion .tl-card[data-active] {
+    border-left-color: var(--accent);
+  }
+  .motion .tl-card > article {
+    display: block;
+    border-top: 0;
+    padding-block: 0;
+  }
+  .motion .tl-card > article > div:first-child {
+    flex-direction: row;
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* The screensaver's circle breathes, unless motion is off. */
+@keyframes breathe-circle {
+  50% {
+    opacity: 0.55;
+    transform: scale(0.86);
+  }
+}
+.motion .breathe-circle {
+  animation: breathe-circle 4.8s ease-in-out infinite;
 }

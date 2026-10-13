@@ -1,92 +1,105 @@
-# PRD: Aakash Buddha Kannan, Portfolio (v2, "Noir Studio")
+# PRD: Aakash Buddha Kannan, Portfolio (v3, "NOIR/OS")
 
 ## 1. Goal
 A portfolio that gets Aakash internship interviews. Within 10 seconds a recruiter knows **who he is, that he is open to internships, what he builds, and where his best work is**, and can email him, open GitHub or LinkedIn, or download the résumé in one click from the first screen.
 
-v2 is a rebuild from scratch. It replaces the v1 "Loki / Archive" site with a new identity and much more motion, without giving up clarity, speed or accessibility.
+v3 is a rebuild from scratch, inspired by eddy-naboulet.dev (a portfolio dressed as an operating system). It replaces v2 "Noir Studio". The identity is his own: the handle **Aakashxnoir** and the `aakash@noir-system` prompt from his GitHub README.
 
 ## 2. Audience
-- **Primary:** internship recruiters and engineering managers who skim. Desktop browsers, 1280px and wider.
+- **Primary:** internship recruiters and engineering managers who skim. Desktop browsers first.
 - **Secondary:** peers, club members, hackathon organisers.
-- Phones and tablets are out of scope by decision (desktop only).
+- **Phones:** a simple stacked layout with the same content (decision, 13 Oct 2026). The OS effects are a desktop experience.
 
 ## 3. Success criteria
 - Name, role, **OPEN TO INTERNSHIPS**, GitHub, LinkedIn and résumé are all on the first screen of `/`.
-- Education (college, degree, years) is visible on `/about` and in the home intro.
-- Every project has its own case-study page, reachable in one click from `/work` and from the home work section.
-- Desktop Lighthouse: Performance 90+, Accessibility 95+, SEO 95+ on every route, with the 3D hero and motion running.
-- Memorable: the noir look, the lit 3D object and the scroll story are what a visitor remembers. Never at the cost of reading the content.
+- Education (college, degree, years) is visible on the desktop and on `/about`.
+- Every project has its own case page, one click from `/work`.
+- Desktop Lighthouse: Performance 90+, Accessibility 95+, SEO 95+ on every route.
+- Memorable: the OS shell, the boot screen, the generative ASCII project art and the small toys (terminal, F1 lights game) are what a visitor remembers. Never at the cost of reading the content.
 
-## 4. Concept: Noir Studio
-Film noir, done as a modern studio site. Near-black and off-white, one sharp red accent, very large condensed type, hard light and deep shadow. The hero is a single dark sculpted object in 3D, lit by a light that follows the cursor. Scrolling tells the story: statement, work, recognition, contact.
+## 4. Concept: NOIR/OS
+The site is Aakash's own operating system. A menu bar runs along the top (File, Extras, System, a live Chennai clock and the internship status). The home page is a desktop: four numbered apps sit in the corners and a photo of Aakash (background removed, natural colour) fills the middle with his name in huge dot-matrix letters across it. The first page of a visit opens with a `NOIR/OS` boot (loading) screen. Each app opens as a full-screen window with a path bar (`~/desktop / projects.vol`) and closes with ESC.
 
-The theme lives in color, type, light and a few small labels ("CASE 01"). The copy itself stays plain and professional.
+| App | File name | Route |
+|---|---|---|
+| 01 Projects | `projects.vol` | `/work`, `/work/[slug]` |
+| 02 Timeline | `timeline.log` | `/timeline` |
+| 03 Profile | `profile.sys` | `/about` |
+| 04 Contact | `contact.app` | `/contact` |
+
+Extras are toys: a terminal that answers real commands about Aakash, and **Lights Out**, an F1 start-lights reaction game (he won a Grand Prix F1 gaming tournament). The System menu switches the screen's phosphor (noir, amber, green), the CRT effect and motion.
 
 ## 5. Tone
 | Where | Tone |
 |---|---|
-| Hero, Work, case studies, Recognition, Stack, Education | Professional, factual, outcome-focused |
-| About statement, Contact | Lightly playful; the first sentence stays plain |
+| Desktop, Projects, case pages, Timeline, Profile roles | Professional, factual, outcome-focused |
+| About statement, Contact, terminal replies, toys | Lightly playful; the first sentence stays plain |
 
-Every claim must be true and sourced from section 8. Playful lines stay short.
+Every claim is true and sourced from section 8. OS labels (file names, `[ ok ]`, commit hashes) are decoration, not claims.
 
-## 6. Structure (multi-page, Next.js App Router, statically generated)
+## 6. Structure (Next.js App Router, statically generated)
 
-| Route | Contents |
-|---|---|
-| `/` | Hero (name, line, status, actions, socials, 3D object), intro statement with education, selected work, recognition strip, contact call |
-| `/work` | Every case file as a large row, plus the "Also" line |
-| `/work/[slug]` | Case study for one project. Slugs: `cheng`, `farmsync`, `rit-digital-twin`, `sevagan`, `infinitus`. Unknown slugs 404 |
-| `/about` | Portrait, statement, body, Education, Recognition, Stack, Outside work |
-| `/contact` | Contact heading, email, status, LinkedIn, GitHub, résumé |
+### Shell (every route)
+- **Menu bar:** home mark `ABK` (link to `/`), menus **File**, **Extras**, **System**; right side: status `open to internships` (link to `/contact`), `Résumé` (download), live clock in IST.
+  - File: open each app, open résumé, new message, copy email, GitHub, LinkedIn.
+  - Extras: Terminal, Lights Out, Surprise me (a random case page).
+  - System: phosphor (Noir, Amber, Green), CRT effect on/off, motion on/off, Sleep, About this site.
+- **Path bar** on every route except `/`: breadcrumbs from `~/desktop`, and `ESC - back to desktop` (or `close project` on a case page). ESC goes one level up.
+- Menus work without JS (`<details>`), and every menu item is a real link or button.
 
-Every route shares the top bar and footer. Routes change with a full-screen transition (Stage 3).
+### Desktop `/`
+1. Four corner apps: number, file name, title.
+2. Portrait behind the name: his photo, background removed, shown as a normal photo (decision, 13 Oct 2026: no ASCII treatment).
+3. Role label `FULL-STACK · ML · QUANTUM`, name `AAKASH BUDDHA KANNAN` at display size.
+4. Hero line, status, **Download résumé**, **GitHub**, **LinkedIn**, education line.
 
-### Top bar
-Left: `AAKASH B.K.` (link to `/`). Right: `Work`, `About`, `Contact` and `Résumé` (download). The current route is marked (`aria-current="page"`, not by colour alone). `Work` is current on `/work/[slug]`.
+### Projects `/work`
+- **Canvas view** (desktop, JS): a draggable plane of project tiles, each with a live generative ASCII artwork and its title. Drag, wheel or arrow keys pan; click opens the case.
+- **List view** (default without JS, on phones, and by toggle): index, title, kind, year, stack.
+- The "Also" line under the list.
 
-### Home, in order
-1. **Hero:** label `PORTFOLIO 2026 / CHENNAI, IN`; name `AAKASH` / `BUDDHA KANNAN` at display size; the hero line; status `OPEN TO INTERNSHIPS`; actions **View work** (primary, to `/work`) and **Download résumé**; GitHub and LinkedIn links. The 3D object sits in the hero (Stage 5); until then, and whenever 3D is off, the hero is typographic.
-2. **Intro:** the About statement, revealed by scroll (Stage 4), with the education line under it.
-3. **Selected work:** every project as a panel. Stage 4 turns this into a pinned horizontal scroll. Each panel links to its case study. A `View all work` link to `/work`.
-4. **Recognition strip:** the awards, one line each.
-5. **Contact call:** the contact heading, the email link and `OPEN TO INTERNSHIPS`.
-6. **Footer**
+### Case page `/work/[slug]`
+Slugs: `cheng`, `farmsync`, `rit-digital-twin`, `sevagan`, `infinitus`. Unknown slugs 404.
+- Large generative ASCII artwork, label `05.1`-style index, title, kind, overview
+- Spec table with dotted leaders: Year, Award, Role, Team, Stack, Links. Empty facts are not shown
+- What I built (bullets from the résumé); optional Problem, Outcome, Media when supplied
+- Previous, All projects, Up next
 
-### Case study page (`/work/[slug]`)
-Shows only fields that exist in `src/content/projects.ts`:
-- Label `CASE 01`, title, kind, year, award (if any)
-- Facts row: Year, Role, Team, Stack, Links. A fact with no value is not shown. A link without a URL is not shown
-- Overview (description)
-- What I built (bullets from the résumé)
-- Optional sections, shown only when Aakash supplies them: Problem, Outcome, Media (screenshots or video)
-- `Back to all work` and `Next case`
+### Timeline `/timeline`
+A git log of his path. A terminal line (`git log --graph`, then `git show <hash>` for the active commit), a horizontal branch graph (`main`, `build`, `wins`, `clubs`) and one large card per commit. Scroll moves along the graph (Stage 2). Without motion it is a plain ordered list.
 
-No invented problems, results, metrics, roles or screenshots.
+### Profile `/about`
+Portrait (the photo, unfiltered), About statement (words light with scroll in Stage 2), body, roles as large headings with a paragraph and tags, Education, Recognition, a `neofetch`-style stack card, Outside work.
 
-### Signature moments (built in later stages)
+### Contact `/contact`
+A mail window `contact.app - new message`: To (email, copy button), status, From, Subject chips, Message. **Send** opens the visitor's mail app (`mailto:`, no backend; works without JS as a GET form). LinkedIn, GitHub, Résumé beside it. Heading: the contact line.
+
+### Signature moments
 | Moment | Stage | Fallback (reduced motion or no JS) |
 |---|---|---|
-| Loading screen: counter 000 to 100 on real loading, red line, lifts onto the hero. Once per session, any key or click skips, capped at 2.4s | 2 | Not shown |
-| Smooth scroll and text reveals | 2 | Native scroll, text visible at once |
-| Full-screen page transition, custom cursor, magnetic buttons | 3 | Instant route change, native cursor, still buttons (back and forward are always instant) |
-| Scroll story: pinned intro statement, pinned horizontal work scroll | 4 | Normal vertical layout, every panel and link reachable |
-| 3D hero: dark sculpted object, cursor-following light | 5 | Reduced motion: one still frame. No JS, no WebGL or no GPU: the typographic hero |
+| Generative ASCII project art | 1 | One still frame; no JS: hidden, titles remain |
+| Draggable project canvas | 1 | List view |
+| Boot (loading) screen: `NOIR/OS` boot log with a real loading counter, CRT power-on. Once per session, skippable, capped at 2.4s, under the menu bar | 2 | Reduced motion: shown still (no power-on, it fades). System > Motion off or no JS: not shown |
+| Lenis smooth scroll, text scramble and line reveals | 2 | Native scroll, text visible at once |
+| Window open and close (View Transitions from the clicked corner) | 2 | Instant route change |
+| Timeline scroll along the graph; Profile statement lighting | 2 | Plain list; statement fully lit |
+| Screensaver after 90s idle: one red circle breathing, the clock | 3 | Static |
+| Terminal, Lights Out, phosphor and CRT switches | 3 | Hidden without JS |
 
-### Out of scope for v2
-Blog, CMS, login, contact form backend (`mailto:` only), analytics beyond Vercel defaults, mobile and tablet layouts, light theme or theme toggle, sound.
+### Out of scope
+Blog, CMS, login, contact form backend (`mailto:` only), analytics beyond Vercel defaults, sound, light theme.
 
 ## 7. Non-functional requirements
-- **Performance:** desktop Lighthouse 90+ on every route. Images via `next/image`, fonts via `next/font`. three.js loads only on `/`, after first paint, and never blocks LCP. GSAP loads only where it is used.
-- **Accessibility:** real `<a>` and `<button>` elements, visible focus, alt text, 4.5:1 text contrast, full keyboard use. The custom cursor never hides the native focus ring.
-- **Progressive enhancement:** every page reads fully with JS off and under `prefers-reduced-motion`. Each effect has a fallback (table above).
-- **Routing:** every route loads directly by URL; back and forward work and restore scroll.
-- **Layout:** desktop only. Designed at 1440px, minimum 1280px.
+- **Performance:** Lighthouse desktop 90+ on every route. Fonts via `next/font`. Canvases start after first paint, pause when off screen or the tab is hidden, and cap the frame rate.
+- **Accessibility:** real `<a>` and `<button>`, visible focus, alt text, 4.5:1 text contrast in all three phosphors, full keyboard use, one `h1` per page. Canvases are decorative (`aria-hidden`) and every fact they suggest is in text.
+- **Progressive enhancement:** every page reads fully with JS off and under `prefers-reduced-motion`.
+- **Routing:** every route loads by URL; back and forward work.
+- **Layout:** designed at 1440px; works from 1280px; phones get the stacked layout below 768px.
 - **SEO:** per-route title and description, Open Graph image naming the role and status, sitemap, robots.
-- **Privacy:** no phone number, birthday or private social accounts on the site.
+- **Privacy:** no phone number, birthday or private socials anywhere on the site.
 
 ## 8. Content (source of truth)
-Sources: résumé (`public/Aakash_Buddha_Kannan_Resume.pdf`), his Obsidian vault (`Me/` notes), and the approved v1 copy.
+Sources: résumé (`public/Aakash_Buddha_Kannan_Resume.pdf`), his Obsidian vault (`Aakash/Me/`, `Aakash/JARVIS/`), his public GitHub, and the approved v2 copy.
 
 ### Identity
 - Name: Aakash Buddha Kannan · Handle: Aakashxnoir · Location: Chennai, India
@@ -96,11 +109,12 @@ Sources: résumé (`public/Aakash_Buddha_Kannan_Resume.pdf`), his Obsidian vault
 - Résumé: `/Aakash_Buddha_Kannan_Resume.pdf`
 - Status: `OPEN TO INTERNSHIPS`
 
-### Hero
-- Label: `PORTFOLIO 2026 / CHENNAI, IN`
-- Name: `AAKASH` / `BUDDHA KANNAN`
+### Desktop
+- Label: `NOIR/OS · CHENNAI, IN`
+- Role label: `FULL-STACK · ML · QUANTUM`
+- Name: `AAKASH BUDDHA KANNAN`
 - Line: "Third-year computer science student building full-stack, machine learning and quantum-optimization products for real problems."
-- Actions: `View work` · `Download résumé`. Links: `GitHub` · `LinkedIn`
+- Education line: B.E. Computer Science · Rajalakshmi Institute of Technology · 2024 to 2028
 
 ### Education
 B.E. Computer Science, Rajalakshmi Institute of Technology, Chennai. Sep 2024 to May 2028. (CGPA stays on the résumé only.)
@@ -108,42 +122,44 @@ B.E. Computer Science, Rajalakshmi Institute of Technology, Chennai. Sep 2024 to
 ### About
 - Statement: "I build things to see whether the idea *actually works*, and I rarely leave a problem alone once it has my attention."
 - Body: "On paper, I'm a third-year CS student in Chennai who works across web, machine learning and quantum optimization, and leads the technical side of my college's mathematics club. Off paper, I'm usually building a game, or losing to one."
-- Portrait: `public/images/aakash.jpg`, black-and-white noir treatment.
-- Outside work (from the vault, Aakash to approve): Languages: Tamil, English, Sourashtra, learning Spanish · Sport: volleyball, spiker, played for his school · Games: competitive F1 racing games, and building his own
+- Portrait: `public/images/aakash.jpg`; the desktop uses a background-removed cut of it in natural colour (`public/images/portrait.png`).
+- Outside work: Languages: Tamil, English, Sourashtra, learning Spanish · Sport: volleyball, spiker, played for his school · Games: competitive F1 racing games, and building his own
+
+### Profile roles
+1. **Full-stack builder.** React and Next.js front ends on Spring Boot, FastAPI and Express back ends, with PostgreSQL, MySQL and Supabase. Shipped RIT Digital Twin, Sevagan and Infinitus. Tags: React, Next.js, Spring Boot, FastAPI, Express, PostgreSQL
+2. **ML and quantum.** In FarmSync, LightGBM predicts yields and a 12-qubit QUBO pipeline in PennyLane ranks crop sequences. Tags: LightGBM, PennyLane, QUBO, Python
+3. **Agent builder.** CHENG, his desktop voice assistant, runs Claude Code through the Claude Agent SDK, drives his own browser behind a permission gate and keeps memory in an Obsidian vault. Tags: Claude Agent SDK, WebSockets, MediaPipe, Node.js
+4. **Club tech lead.** Technical Head of Infinitus, RIT's mathematics club: leads its technical development, web platform and technical decisions. Editor at the Women's Empowerment Club. Tags: Leadership, Next.js, Resend
+5. **Game maker.** Builds games in Godot 4, including a 2D platformer with enemy state machines and a multi-phase boss AI; won a Grand Prix F1 gaming tournament. Tags: Godot 4, GDScript
 
 ### Case files
-Order: CHENG, FarmSync, RIT Digital Twin, Sevagan, Infinitus. Links stay empty until Aakash supplies them.
-
-**01. CHENG** · Personal AI desktop assistant, 2026 to present
-A desktop voice assistant with Claude Code as its brain. A local Node server runs the agent and streams it over WebSockets to a React interface; it wakes on a spoken phrase, answers in a single voice, drives the user's own browser over the Chrome DevTools Protocol behind a permission gate and on-screen confirmations, takes hand-gesture input through MediaPipe, and keeps long-term memory in an Obsidian vault.
-Built: wake word, voice activity detection and speech-to-text in the browser, with server-side text-to-speech in one voice · Browser control over the Chrome DevTools Protocol, with a permission gate that denies tool calls before they run and confirmations on the interface for outward actions · Hand control through MediaPipe: pointing reticle, pinch to press, two-hand resize, filtered tracking · Long-term memory: notes read from an Obsidian vault into the agent's context, and every exchange written back to it
-Stack: React, TypeScript, Vite, Node.js, WebSockets, Claude Agent SDK, MediaPipe, Zustand
-(Source: vault `JARVIS Overview`, `JARVIS Journal`, repo `ARCHITECTURE.md`. Repo is private: no source link. Aakash to approve this copy.)
-
-**02. FarmSync** · Quantum-AI crop advisor, 2026
-Recommends crop sequences across growing seasons by combining agronomic feasibility rules, LightGBM yield prediction, and quantum optimization.
-Built: a full-stack crop advisory platform combining agronomic feasibility rules, LightGBM yield prediction and quantum optimization to recommend crop sequences across multiple growing seasons · Crop sequencing formulated as a QUBO, solved by a 12-qubit SPARQ optimization pipeline in PennyLane with constraint-preserving XY mixing, warm-start initialization and measurement-based ranking
-Stack: Flutter, FastAPI, LightGBM, PennyLane, PostgreSQL
-
-**03. RIT Digital Twin** · Smart campus management platform, 2025 · Award: 1st Place, Designathon 2025
-A smart campus management platform with JWT authentication, role-based access for five user types, timetable generation with PDF export, and classroom booking workflows.
-Built: JWT authentication and role-based access for five user types · Timetable generation with PDF export · Classroom booking workflows · Deployed on Vercel and Render with CI/CD
-Stack: React, Spring Boot (Java 21), MySQL 8, Docker, Vercel, Render
-
-**04. Sevagan** · Civic issue tracking platform, 2026
-A role-based platform with citizen, admin and worker workflows for issue reporting, assignment, status tracking and completion-photo management.
-Built: citizen, admin and worker workflows for reporting, assignment, status tracking and completion photos · REST APIs with Express and Supabase/PostgreSQL persistence, including image uploads · An optional Ethereum/Hardhat layer for issue hashing and integrity verification
-Stack: React, Express, Supabase, PostgreSQL, Tailwind CSS, Solidity
-
-**05. Infinitus** · Mathematics club platform, 2026 to present
-The official platform for RIT's mathematics club: event and member pages, an authenticated admin dashboard, and contact and registration workflows.
-Built: reusable Next.js components, responsive event and member pages, contact workflows and an authenticated admin dashboard · Server-side API routes with Supabase/PostgreSQL persistence, event registration-link management, contact-message handling, rate limiting and email notifications through Resend
-Stack: Next.js, React, Supabase, PostgreSQL, Tailwind CSS, Resend
+Order: CHENG, FarmSync, RIT Digital Twin, Sevagan, Infinitus. Copy is unchanged from v2 (see `src/content/projects.ts`). Links (approved 13 Oct 2026):
+- FarmSync: Source https://github.com/Aakashxnoir/FarmSync
+- Sevagan: Source https://github.com/Aakashxnoir/Sevagan---Multilingual-Service-app
+- Infinitus: Live https://infinitus-seven.vercel.app · Source https://github.com/Aakashxnoir/Infinitus
+- CHENG: repo private, no link. RIT Digital Twin: no link yet.
 
 **Also** (one quiet line):
-- Irrumbu Kottaai Pallupudingi, a 2D action platformer with enemy state machines and multi-phase boss AI (Godot 4, GDScript)
-- life-tracker, a personal habit and focus tracker (React, Vite, Tailwind, Firebase)
-- NBOS Skill-swap, a platform for sharing and swapping skills (JavaScript)
+- Irrumbu Kottaai Pallupudingi, a 2D action platformer with enemy state machines and multi-phase boss AI (Godot 4, GDScript). No link.
+- life-tracker, a personal habit and focus tracker (React, Vite, Tailwind, Firebase). https://github.com/Aakashxnoir/life-tracker
+- NBOS Skill-swap, a platform for sharing and swapping skills (JavaScript). https://github.com/Aakashxnoir/NBOS-Skill-swap-
+
+### Timeline (commits, oldest first)
+Dates are shown only as precisely as the source gives them. Within 2026, projects are ordered by their GitHub repo dates.
+| Branch | Date | Commit | Detail |
+|---|---|---|---|
+| main | Sep 2024 | init: B.E. Computer Science | Started at Rajalakshmi Institute of Technology, Chennai |
+| wins | Aug 2025 | Hack The Horizon 2.0 | 24-hour inter-institutional hackathon by the AI Club at VIT Chennai; built and presented a working prototype |
+| build | 2025 | RIT Digital Twin | Smart campus management platform |
+| wins | 2025 | 1st Place, Designathon 2025 | For RIT Digital Twin (merge) |
+| clubs | 2026 | Technical Head, Infinitus Club | Leads technical development, web platforms and technical decisions |
+| wins | Apr 2026 | 1st Place, Grand Prix F1 Gaming Tournament | Gamathon by Revolution Games, 9 to 11 April 2026, a three-day tournament |
+| build | 2026 | Sevagan | Civic issue tracking platform |
+| build | Aug 2026 | CHENG | First build of his desktop voice assistant |
+| build | 2026 | Infinitus | The mathematics club's platform |
+| build | 2026 | FarmSync | Quantum-AI crop advisor |
+| main | Oct 2026 | HEAD: third year | Open to internships |
+| main | May 2028 | B.E. completes | Expected (shown dashed) |
 
 ### Recognition
 - 1st Place, Designathon, 2025 (RIT Digital Twin)
@@ -162,17 +178,12 @@ Stack: Next.js, React, Supabase, PostgreSQL, Tailwind CSS, Resend
 - Tools: Git, Docker, Maven, Vercel, Render, Godot 4
 
 ### Contact
-- Label: `CONTACT`
 - Heading: "Have a problem worth *solving?* File it with me."
-- Email (large), status, LinkedIn, GitHub, Résumé (PDF)
-
-### Footer
-`© 2026 AAKASH BUDDHA KANNAN` · email · GitHub · LinkedIn · Résumé
+- Email, status, LinkedIn, GitHub, Résumé (PDF)
 
 ## 9. Open items (Aakash to provide)
-- [ ] Live and source links for each case file (public repos exist for FarmSync, Sevagan and Infinitus; Infinitus is live at infinitus-seven.vercel.app; he will confirm which to use)
-- [ ] RIT Digital Twin links; FarmSync demo video; which repo is Irrumbu Kottaai Pallupudingi
+- [ ] RIT Digital Twin links; FarmSync demo video
 - [ ] Role and team size per project
 - [ ] Screenshots or short clips per project; Problem and Outcome lines, if he wants them
-- [ ] Approve the CHENG copy and the Outside work line
 - [ ] Whether the public résumé PDF keeps his phone number
+- [ ] A domain (for `NEXT_PUBLIC_SITE_URL`)

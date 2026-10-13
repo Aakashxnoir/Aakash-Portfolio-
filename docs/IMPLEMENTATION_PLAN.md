@@ -1,108 +1,84 @@
-# Implementation Plan
+# Implementation Plan (v3, NOIR/OS)
 
-Build in stages. **Finish a stage, run the checks, summarize, then stop and wait.** Every stage leaves the site working and deployable.
+Build in stages. **Finish a stage, run the checks, summarize, then stop and wait.** Every stage leaves the site working and deployable. v2 ("Noir Studio") is in git history (`7632f97`).
 
 ## Architecture
-**Stack:** Next.js 16 (App Router, static) · TypeScript · Tailwind CSS 4 · GSAP + ScrollTrigger + SplitText (Stage 2 on) · Lenis (Stage 2 on) · three.js (Stage 5, `/` only) · Vercel.
-
-One animation library (GSAP) for everything; no Framer Motion. Lenis is the only scroll driver.
-
-`cacheComponents` is **off**: the site is fully static, and Cache Components keeps old routes mounted but hidden, which fights page transitions and pinned scroll. `dynamicParams = false` makes unknown case slugs 404.
+**Stack:** Next.js 16 (App Router, static, `cacheComponents` off) · TypeScript · Tailwind CSS 4 · GSAP (ScrollTrigger, SplitText, ScrambleText) · Lenis · Canvas 2D for all ASCII work · React `<ViewTransition>` for windows · Vercel. three.js is removed.
 
 ```
 src/
 ├── app/
-│   ├── layout.tsx            fonts, metadata, top bar, footer
-│   ├── page.tsx              / : hero, intro, work, recognition, contact call
-│   ├── work/page.tsx         /work
-│   ├── work/[slug]/page.tsx  case study (generateStaticParams, 404 for unknown)
-│   ├── about/page.tsx · contact/page.tsx · not-found.tsx
-│   ├── sitemap.ts · robots.ts · icon.svg · opengraph-image
-│   └── globals.css           tokens, type scale, base styles
-├── components/               small server components (Nav, Footer, Hero, WorkRow, CaseFacts, ...)
-│   ├── motion/               Stage 2 to 4 client pieces (SmoothScroll, Reveal, Curtain, Cursor, Magnetic, ...)
-│   └── three/                Stage 5 (HeroScene, dynamic import, still fallback)
-├── content/                  site.ts · projects.ts · about.ts (all copy lives here)
-└── lib/                      small helpers
+│   ├── layout.tsx            fonts, metadata, prefs head script, Shell
+│   ├── page.tsx              / desktop
+│   ├── work/page.tsx         projects.vol (canvas + list)
+│   ├── work/[slug]/page.tsx  case page (generateStaticParams, dynamicParams false)
+│   ├── timeline/page.tsx     timeline.log
+│   ├── about/page.tsx        profile.sys
+│   ├── contact/page.tsx      contact.app
+│   ├── not-found.tsx · sitemap.ts · robots.ts · icon.svg · opengraph-image.tsx
+│   └── globals.css           tokens (three phosphors), type, CRT, base styles
+├── components/
+│   ├── shell/                MenuBar, Menu, Clock, PathBar, EscapeKey, Window (view transition), WindowOrigin
+│   ├── ascii/                engine (glyph renderer), fields (project artworks), AsciiArt
+│   ├── desktop/ work/ case/ timeline/ profile/ contact/
+│   ├── motion/               Boot, SmoothScroll (Lenis), Motion (scramble, reveals, lit text), LitText, gsap loader
+│   └── extras/               Extras host, AppWindow, Terminal (+ commands), LightsOut, Screensaver
+├── content/                  site.ts · projects.ts · profile.ts · timeline.ts · extras.ts (all copy)
+└── lib/                      prefs (phosphor, CRT, motion), window (transition origins), extras (open events)
 ```
 
 Principles
-- **All copy in `src/content/`**, verbatim from `docs/PRD.md`. Components only render it.
-- **Server first.** Every page is complete HTML with JS off. Client components only add motion on top.
-- **Optional fields render nothing when empty** (role, team, links, problem, outcome, media).
+- **All copy in `src/content/`**, verbatim from `docs/PRD.md`.
+- **Server first.** Every page is complete HTML with JS off. Client components add motion and toys on top.
+- **Optional fields render nothing when empty.**
+- **Preferences** (phosphor, CRT, motion) live in `localStorage`, applied by an inline head script before first paint, as `data-*` attributes on `<html>`.
 
 ---
 
-## Stage 1: Foundation and static site
-Done. Motion, 3D, Lighthouse and media wait for their stages.
-- [x] Next.js app in `~/Documents/Projects/Portfolio`; `cacheComponents` off; git initialised (no commit until asked)
-- [x] Fonts (Archivo with `wdth` axis, JetBrains Mono) and every token from `DESIGN_SYSTEM.md` in `globals.css`
-- [x] Content files: `site.ts`, `projects.ts` (5 case files + Also), `about.ts` (education, recognition, stack, outside work)
-- [x] Top bar with current-route marking, footer
-- [x] `/`: hero (no 3D yet), intro with education, selected work, recognition strip, contact call
-- [x] `/work`, `/work/[slug]` (5 case studies, optional sections hidden when empty), `/about` (portrait, education, recognition, stack, outside work), `/contact`, 404
-- [x] Per-route metadata, sitemap, robots, icon, Open Graph image with role and status
-- [x] Portrait and résumé in `public/`
-- [x] Checked at 1440px and 1280px; build and lint pass; no console errors
+## Stage 1: Foundation, shell, every route, ASCII
+Done (13 Oct 2026).
+- [x] Remove three.js and v2 components; Doto + JetBrains Mono; tokens for three phosphors; CRT overlay
+- [x] Content files: `site.ts`, `projects.ts` (with links), `profile.ts`, `timeline.ts`
+- [x] Shell: menu bar (File, Extras, System as `<details>` menus), status, résumé, IST clock; path bar with ESC
+- [x] ASCII engine (glyph atlases, one drawImage per cell); portrait from `portrait-cutout.png` (red rim light, cursor light, scramble, per-app character sets incl. Tamil, still under reduced motion, static text without JS)
+- [x] Desktop `/` with four apps, name, line, actions, education
+- [x] Five generative project artworks; `/work` canvas (drag, wheel, keys, inertia, idle drift) and list; `/work/[slug]` case pages
+- [x] `/timeline` (graph + commit list), `/about` (dithered cut-out with a lens onto the photo, statement, roles, education, recognition, neofetch stack with outside work), `/contact` (mailto form)
+- [x] Phosphor switch in System menu (CRT and Motion switches too)
+- [x] Phone layout below 768px
+- [x] Metadata, sitemap, robots, icon, favicon, OG image; 404
+- [x] Build and lint pass; 1440, 1280 and 390 checked (no overflow, one `h1` per page, no console errors); JS off and reduced motion checked
+- *Decision: the portrait cut-out was made with rembg (u2net_human_seg) from `aakash.jpg`, cropped to head and shoulders, contrast-equalised.*
+- *Superseded 13 Oct 2026 (Aakash): the portrait is a normal photo, not ASCII or dithered. The desktop shows `portrait.png` (the same cut, in colour, from `aakash.jpg`); Profile shows `aakash.jpg`. The ASCII portrait, per-app character sets and the dither lens were removed.*
 
-## Stage 2: Motion foundation
-Done.
-- [x] `gsap`, `lenis` installed; Lenis runs on GSAP's ticker and feeds ScrollTrigger (`motion/MotionRoot.tsx`), off under reduced motion
-- [x] Motion switch: an inline head script adds `motion` to `<html>` before first paint when motion is allowed (`lib/motion.ts`), with a 6s failsafe if the app never hydrates. All motion CSS and the `fx:` Tailwind variant key off it
-- [x] First-screen entrances are CSS only (`enter-line` mask rise, `enter-fade`), so they never wait for JS and never delay LCP
-- [x] `Reveal` (SplitText line masks, or fade and rise) for content that scrolls into view; once only
-- [x] No-JS and reduced motion: no class, so every page is complete and still (checked with JS off and with reduced motion)
-- *Decision: the separate hairline-draw effect was dropped; rows reveal as a whole.*
+## Stage 2: Motion
+Done (13 Oct 2026).
+- [x] Lenis + GSAP ticker + ScrollTrigger (GSAP loads after first paint); motion class before first paint. Nothing is hidden in the server HTML, so no failsafe is needed for content; the boot screen has a CSS failsafe (hidden after 4s)
+- [x] Boot (loading) screen: once per session, skippable, real loading (fonts, images, motion libraries, window load), capped at 2.4s, under the menu bar. Shown still under reduced motion (Aakash asked for a loading page); not shown with System > Motion off or without JS
+- [x] Scramble (display headings) and fade-and-rise reveals (blocks), once each; on first load only what is off screen is hidden
+- [x] View-transition windows: open grows from the click point, close shrinks to the app's desktop corner; menu bar anchored
+- [x] Timeline: pinned horizontal scroll along the graph from 768px (active commit ringed, lines draw, `git show <hash>`, focus scrolls to a card); Profile statement lighting
+- *Decision: System > Motion is `auto` by default (follows prefers-reduced-motion); an explicit on/off from the visitor wins.*
 
-## Stage 3: Page transitions, cursor, magnetic
-Done.
-- [x] Full-screen curtain (`motion/PageTransition.tsx`): internal link clicks raise it, the route changes underneath, it lifts and the new page's entrance plays. Shows the destination's name. Never takes pointer events or focus; 2.5s give-up
-- [x] *Decision: browser back and forward change routes instantly (no curtain), so the browser's own scroll restoration is untouched.*
-- [x] Custom cursor (`motion/Cursor.tsx`): fine pointer only, off under reduced motion; native cursor hidden only while it runs; focus rings untouched
-- [x] Magnetic nav links, hero actions, contact email and next case (`motion/Magnetic.tsx`)
-- [x] GSAP cleanups run in layout effects, so pin spacers and split lines are undone before React removes a page (fixes a route-change crash)
+## Stage 3: Extras
+Done (13 Oct 2026).
+- [x] Terminal (command parser, history, tab completion, navigation, theme switching)
+- [x] Lights Out (F1 start reaction game, best time in `localStorage`)
+- [x] Screensaver (idle 90s or System > Sleep), tab title while hidden
+- [x] CRT and motion switches wired; Surprise me (done in Stage 1)
 
-## Stage 4: Scroll story (home)
-Done.
-- [x] Pinned intro: the statement's words light in order with scroll (unlit words stay `--text-muted`, readable)
-- [x] Pinned horizontal work track with a progress line; panels are single links to the case studies; tabbing to a panel scrolls it into view (the frame is `overflow: clip`, so focus never shifts the track natively)
-- [x] Fallback: the vertical list is rendered too and shown by CSS when motion is off; only one layout is ever in the accessibility tree
-- [x] Back and forward across the pins restore position, no stuck pin spacer
-
-## Stage 5: 3D hero
-Done.
-- [x] `three` installed; `three/HeroScene.tsx` loads `three/scene.ts` with a dynamic import after `load` and idle, on `/` only
-- [x] A dark twisted column (original geometry), softbox key light following the pointer with damping, faint studio reflections, rim light, red kicker; renders only while the hero is visible and the tab is shown; shaders compile asynchronously
-- [x] *Decision: no still image file. Reduced motion renders one still WebGL frame; no JS, no WebGL or a software renderer (no GPU) keep the typographic hero.*
-- [x] three.js is in the home route's chunks only
-
-## Stage 6: Case study media
-Ready, waiting on content.
-- [x] `CaseMedia` (image or video, hairline frame, true colour, no autoplay) and the Role, Team, Problem, Outcome and Links fields render when present
-- [ ] Aakash to supply media, roles, team sizes and links (see `PRD.md` open items)
-
-## Stage 7: Polish and performance
-Done. Lighthouse desktop on the production build: Performance 99 on `/`, 100 on `/work`, `/work/farmsync`, `/about` and `/contact`; Accessibility, Best Practices and SEO 100 on every route; CLS 0. (Lighthouse runs without a GPU, so `/` is measured with the typographic hero.)
-- [x] Checked at 1440px and 1280px with motion on and off; no overflow; no console errors
-- [x] Decorative case numbers drawn by CSS (not text) so they pass the contrast audit
-
-## Revisions after review (13 Oct)
-- [x] Home intro pins by its centre (no blank half-screen after it)
-- [x] JARVIS renamed CHENG (`/work/cheng`)
-- [x] Section headings (About and the home Recognition strip) on their own full-width row, so long words are never clipped
-- [x] Faster curtain (about 1.1s) with the destination name rising in
-- [x] Loading screen (once per session), link hover underline, portrait mask reveal, staggered list rows. Lighthouse still 100 on `/` with the loader
-
-## Stage 8: Deploy
-- [ ] GitHub repo, Vercel import, `NEXT_PUBLIC_SITE_URL`; live URL on résumé, LinkedIn and GitHub
+## Stage 4: Polish, performance, deploy
+- [x] Lighthouse desktop 90+ on every route; no console errors (13 Oct 2026: 100 / 100 / 100 / 100 on all six routes, LCP 0.6 to 0.8s)
+- [x] Contrast check in all phosphors (lowest pair 5.2:1); keyboard pass
+- [ ] GitHub repo, Vercel, `NEXT_PUBLIC_SITE_URL` (waiting on Aakash: push, Vercel project, domain)
 
 ---
 
 ## Test checklist (every stage)
 **Build:** `npm run build` and `npm run lint` pass.
-**Layout:** 1440px and 1280px, no overflow or clipped text.
-**Routing:** each route loads by URL; `/work/nope` 404s; back and forward work.
-**Content:** every fact matches `PRD.md`; no phone number; no `[link]` placeholders shown; email, GitHub, LinkedIn and résumé work.
-**Accessibility:** keyboard reaches everything with visible focus; one `h1` per page with a correct accessible name; alt text; contrast 4.5:1.
-**Motion (Stage 2 on):** reduced motion and JS off both show every page fully; nothing blocks the nav.
-**Performance:** Lighthouse desktop 90+; GSAP and three.js only where used.
+**Layout:** 1440px, 1280px and 390px; no overflow or clipped text.
+**Routing:** each route loads by URL; `/work/nope` 404s; back and forward work; ESC goes up one level.
+**Content:** every fact matches `PRD.md`; no phone number or birthday; no `[link]` placeholders; email, GitHub, LinkedIn and résumé work.
+**Accessibility:** keyboard reaches everything with visible focus; one `h1` per page; alt text; 4.5:1 contrast in all phosphors.
+**Motion:** reduced motion and JS off both show every page fully; nothing blocks the menu bar.
+**Performance:** Lighthouse desktop 90+.

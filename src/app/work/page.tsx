@@ -1,46 +1,34 @@
 import type { Metadata } from "next";
-import Container from "@/components/Container";
-import EnterTitle from "@/components/EnterTitle";
-import Reveal from "@/components/motion/Reveal";
-import PageHeader from "@/components/PageHeader";
-import WorkRow from "@/components/WorkRow";
-import { also, projects } from "@/content/projects";
-import { workSection } from "@/content/site";
+import PathBar from "@/components/shell/PathBar";
+import Window from "@/components/shell/Window";
+import WorkList from "@/components/work/WorkList";
+import WorkView from "@/components/work/WorkView";
+import { caseNumber, projects, workLabels } from "@/content/projects";
+import { getApp } from "@/content/site";
+
+const app = getApp("work");
 
 export const metadata: Metadata = {
-  title: "Work",
-  description: `Case files: ${projects.map((project) => project.title).join(", ")}.`,
+  title: workLabels.title,
+  description: projects.map((p) => `${p.title}: ${p.kind}`).join(". "),
 };
 
 export default function WorkPage() {
+  const tiles = projects.map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    kind: p.kind,
+    year: p.year,
+    number: caseNumber(p),
+    art: p.art,
+  }));
   return (
-    <section aria-labelledby="work-title">
-      <Container>
-        <PageHeader label={workSection.label}>
-          <EnterTitle id="work-title" className="type-display mt-8 text-title font-bold text-text">
-            {workSection.heading}
-          </EnterTitle>
-        </PageHeader>
-
-        <div className="mt-24">
-          {projects.map((project) => (
-            <WorkRow key={project.slug} project={project} />
-          ))}
-        </div>
-
-        <Reveal className="grid grid-cols-12 gap-x-8 border-t border-rule pt-10">
-          <p className="type-label col-span-7 text-text-muted">{also.label}</p>
-          <p className="col-span-5 text-[0.9375rem] leading-relaxed text-text-muted">
-            {also.items.map((item, i) => (
-              <span key={item.name}>
-                <span className="text-text-soft">{item.name}</span>
-                {item.rest}
-                {i < also.items.length - 1 ? ". " : "."}
-              </span>
-            ))}
-          </p>
-        </Reveal>
-      </Container>
-    </section>
+    <Window>
+      <div className="pt-path">
+        <PathBar trail={[{ label: app.file }]} />
+        <h1 className="sr-only">{workLabels.title}</h1>
+        <WorkView tiles={tiles} list={<WorkList />} />
+      </div>
+    </Window>
   );
 }

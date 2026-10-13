@@ -1,3 +1,5 @@
+import type { FieldId } from "@/components/ascii/fields";
+
 export type ProjectLink = { label: string; href: string };
 
 /** A screenshot or clip in `public/work/<slug>/`. Width and height are the file's own. */
@@ -34,6 +36,8 @@ export type Project = {
   outcome?: string;
   links: ProjectLink[];
   media: ProjectMedia[];
+  /** The generative ASCII artwork drawn for this case. */
+  art: FieldId;
 };
 
 /** Display order is array order. */
@@ -63,6 +67,7 @@ export const projects: Project[] = [
     ],
     links: [],
     media: [],
+    art: "voice",
   },
   {
     slug: "farmsync",
@@ -76,8 +81,9 @@ export const projects: Project[] = [
       "Crop sequencing formulated as a QUBO, solved by a 12-qubit SPARQ optimization pipeline in PennyLane with constraint-preserving XY mixing, warm-start initialization and measurement-based ranking",
     ],
     stack: ["Flutter", "FastAPI", "LightGBM", "PennyLane", "PostgreSQL"],
-    links: [],
+    links: [{ label: "Source", href: "https://github.com/Aakashxnoir/FarmSync" }],
     media: [],
+    art: "field",
   },
   {
     slug: "rit-digital-twin",
@@ -96,6 +102,7 @@ export const projects: Project[] = [
     stack: ["React", "Spring Boot (Java 21)", "MySQL 8", "Docker", "Vercel", "Render"],
     links: [],
     media: [],
+    art: "campus",
   },
   {
     slug: "sevagan",
@@ -110,8 +117,14 @@ export const projects: Project[] = [
       "An optional Ethereum/Hardhat layer for issue hashing and integrity verification",
     ],
     stack: ["React", "Express", "Supabase", "PostgreSQL", "Tailwind CSS", "Solidity"],
-    links: [],
+    links: [
+      {
+        label: "Source",
+        href: "https://github.com/Aakashxnoir/Sevagan---Multilingual-Service-app",
+      },
+    ],
     media: [],
+    art: "city",
   },
   {
     slug: "infinitus",
@@ -125,8 +138,12 @@ export const projects: Project[] = [
       "Server-side API routes with Supabase/PostgreSQL persistence, event registration-link management, contact-message handling, rate limiting and email notifications through Resend",
     ],
     stack: ["Next.js", "React", "Supabase", "PostgreSQL", "Tailwind CSS", "Resend"],
-    links: [],
+    links: [
+      { label: "Live site", href: "https://infinitus-seven.vercel.app" },
+      { label: "Source", href: "https://github.com/Aakashxnoir/Infinitus" },
+    ],
     media: [],
+    art: "infinity",
   },
 ];
 
@@ -144,7 +161,15 @@ export function getNextProject(project: Project): Project {
   return projects[(projects.indexOf(project) + 1) % projects.length];
 }
 
-export const also = {
+/** The project before this one; the first wraps to the last. */
+export function getPreviousProject(project: Project): Project {
+  return projects[(projects.indexOf(project) - 1 + projects.length) % projects.length];
+}
+
+export const also: {
+  label: string;
+  items: { name: string; rest: string; href?: string }[];
+} = {
   label: "Also",
   items: [
     {
@@ -154,10 +179,47 @@ export const also = {
     {
       name: "life-tracker",
       rest: ", a personal habit and focus tracker (React, Vite, Tailwind, Firebase)",
+      href: "https://github.com/Aakashxnoir/life-tracker",
     },
     {
       name: "NBOS Skill-swap",
       rest: ", a platform for sharing and swapping skills (JavaScript)",
+      href: "https://github.com/Aakashxnoir/NBOS-Skill-swap-",
     },
   ],
+};
+
+export const workLabels = {
+  title: "Projects",
+  intro: "Five case files. Drag the canvas, or switch to the list.",
+  canvas: "Canvas",
+  list: "List",
+  views: "View",
+  dragHint: "Drag, scroll or use the arrow keys",
+  files: "files",
+  index: "No.",
+  name: "Name",
+  kind: "Kind",
+  year: "Year",
+  stack: "Stack",
+  open: "Open",
+} as const;
+
+/** Case page section headings and fact labels. */
+export const caseLabels = {
+  overview: "Overview",
+  built: "What I built",
+  problem: "Problem",
+  outcome: "Outcome",
+  media: "Screens",
+  year: "Year",
+  award: "Award",
+  role: "Role",
+  team: "Team",
+  stack: "Stack",
+  links: "Links",
+  previous: "Previous",
+  allProjects: "All projects",
+  upNext: "Up next",
+  caseFiles: "Case files",
 } as const;

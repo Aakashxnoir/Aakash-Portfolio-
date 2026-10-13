@@ -1,39 +1,59 @@
 import type { Metadata } from "next";
-import Container from "@/components/Container";
-import EnterTitle from "@/components/EnterTitle";
-import Magnetic from "@/components/motion/Magnetic";
-import { enterDelay } from "@/components/motion/enter";
-import PageHeader from "@/components/PageHeader";
 import Rich from "@/components/Rich";
-import SocialLinks from "@/components/SocialLinks";
-import Status from "@/components/Status";
-import { contact, richToString, site } from "@/content/site";
+import ContactApp from "@/components/contact/ContactApp";
+import PathBar from "@/components/shell/PathBar";
+import Window from "@/components/shell/Window";
+import { contact, getApp, labels, richToString, site } from "@/content/site";
+
+const app = getApp("contact");
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: richToString(contact.heading),
+  title: contact.label,
+  description: `${richToString(contact.heading)} ${site.email}`,
 };
 
 export default function ContactPage() {
+  const elsewhere = [
+    { label: labels.linkedin, href: site.linkedin, external: true },
+    { label: labels.github, href: site.github, external: true },
+    { label: labels.resumePdf, href: site.resume, download: true },
+  ];
   return (
-    <Container>
-      <PageHeader label={contact.label}>
-        <EnterTitle className="type-display mt-8 max-w-[1100px] text-balance text-contact font-bold text-text">
-          <Rich text={contact.heading} />
-        </EnterTitle>
-        <div
-          className="enter-fade mt-16 flex flex-wrap items-baseline gap-x-12 gap-y-4"
-          style={enterDelay(350)}
-        >
-          <Magnetic>
-            <a href={`mailto:${site.email}`} className="link-primary text-statement font-light">
-              {site.email}
-            </a>
-          </Magnetic>
-          <Status />
+    <Window>
+      <div className="pt-path">
+        <PathBar trail={[{ label: app.file }]} />
+        <div className="grid gap-12 px-read pt-14 pb-24 md:grid-cols-12 md:gap-6">
+          <div className="md:col-span-5">
+            <p className="type-label text-text-muted">
+              <span className="text-accent">{app.number}</span> · {app.file}
+            </p>
+            <h1 className="type-display mt-4 text-[clamp(2.25rem,4vw,3.75rem)] leading-[0.95] text-text">
+              <Rich text={contact.heading} />
+            </h1>
+            <p className="type-label mt-12 text-text-muted">{contact.elsewhere}</p>
+            <ul className="mt-3 border-t border-rule">
+              {elsewhere.map((link) => (
+                <li key={link.href} className="border-b border-rule">
+                  <a
+                    href={link.href}
+                    {...(link.external ? { target: "_blank", rel: "noreferrer" } : {})}
+                    {...(link.download ? { download: true } : {})}
+                    className="flex items-center justify-between py-3 text-text transition-colors hover:text-accent"
+                  >
+                    {link.label}
+                    <span aria-hidden className="text-text-muted">
+                      {link.download ? "↓" : "↗"}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div data-reveal className="md:col-span-7 md:col-start-6 lg:col-span-6 lg:col-start-7">
+            <ContactApp />
+          </div>
         </div>
-        <SocialLinks resume className="enter-fade mt-12" style={enterDelay(450)} />
-      </PageHeader>
-    </Container>
+      </div>
+    </Window>
   );
 }
