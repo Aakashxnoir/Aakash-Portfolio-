@@ -10,6 +10,8 @@ const STEPS = Object.keys(boot.steps) as Step[];
 /** Time limits, in ms from navigation start. */
 const MIN_SHOWN = 900;
 const CAP = 1850;
+/** The counter's shortest run from 000 to 100, in ms; it ends by CAP. */
+const FINISH = 450;
 /** Length of the exit (the screen opening from a line), in ms. */
 const EXIT = 550;
 
@@ -102,17 +104,21 @@ export default function Boot() {
     };
 
     // The counter eases toward the share of steps done; it reaches 100 only
-    // when every step has, and never before MIN_SHOWN.
+    // when every step has, and never before MIN_SHOWN. Near the cap a floor
+    // pulls it up to 100 over FINISH, so it always counts up from 000 rather
+    // than jumping, even when this script starts late.
+    const finishAt = Math.max(CAP, performance.now() + FINISH);
     const tick = () => {
       raf = requestAnimationFrame(tick);
       if (exiting) return;
+      const now = performance.now();
       const target = (done.size / STEPS.length) * 100;
       shown += (target - shown) * 0.12 + (shown < target ? 0.4 : 0);
       shown = Math.min(shown, target);
+      shown = Math.max(shown, Math.min(100, (1 - (finishAt - now) / FINISH) * 100));
       counter.textContent = String(Math.round(shown)).padStart(3, "0");
       bar.style.scale = `${shown / 100} 1`;
-      const now = performance.now();
-      if ((shown > 99.5 && now > MIN_SHOWN) || now > CAP) exit();
+      if ((shown > 99.5 && now > MIN_SHOWN) || now >= finishAt) exit();
     };
     raf = requestAnimationFrame(tick);
 
