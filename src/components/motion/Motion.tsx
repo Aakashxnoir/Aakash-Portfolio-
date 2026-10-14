@@ -19,7 +19,7 @@ const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
  * Nothing is hidden in the server HTML. On the first page load, what is already
  * on screen stays as painted (it only animates in as the boot screen opens);
  * blocks further down are hidden only once they are off screen and the script is
- * running. Under reduced motion or System > Motion off, none of this runs.
+ * running. With System > Motion off, none of this runs.
  */
 export default function MotionController() {
   const pathname = usePathname();

@@ -40,25 +40,25 @@ Done (13 Oct 2026).
 - [x] Remove three.js and v2 components; Doto + JetBrains Mono; tokens for three phosphors; CRT overlay
 - [x] Content files: `site.ts`, `projects.ts` (with links), `profile.ts`, `timeline.ts`
 - [x] Shell: menu bar (File, Extras, System as `<details>` menus), status, résumé, IST clock; path bar with ESC
-- [x] ASCII engine (glyph atlases, one drawImage per cell); portrait from `portrait-cutout.png` (red rim light, cursor light, scramble, per-app character sets incl. Tamil, still under reduced motion, static text without JS)
+- [x] ASCII engine (glyph atlases, one drawImage per cell); portrait from `portrait-cutout.png` (red rim light, cursor light, scramble, per-app character sets incl. Tamil, still with System > Motion off, static text without JS)
 - [x] Desktop `/` with four apps, name, line, actions, education
 - [x] Five generative project artworks; `/work` canvas (drag, wheel, keys, inertia, idle drift) and list; `/work/[slug]` case pages
 - [x] `/timeline` (graph + commit list), `/about` (dithered cut-out with a lens onto the photo, statement, roles, education, recognition, neofetch stack with outside work), `/contact` (mailto form)
 - [x] Phosphor switch in System menu (CRT and Motion switches too)
 - [x] Phone layout below 768px
 - [x] Metadata, sitemap, robots, icon, favicon, OG image; 404
-- [x] Build and lint pass; 1440, 1280 and 390 checked (no overflow, one `h1` per page, no console errors); JS off and reduced motion checked
+- [x] Build and lint pass; 1440, 1280 and 390 checked (no overflow, one `h1` per page, no console errors); JS off and motion off checked
 - *Decision: the portrait cut-out was made with rembg (u2net_human_seg) from `aakash.jpg`, cropped to head and shoulders, contrast-equalised.*
 - *Superseded 13 Oct 2026 (Aakash): the portrait is a normal photo, not ASCII or dithered. The desktop shows `portrait.png` (the same cut, in colour, from `aakash.jpg`); Profile shows `aakash.jpg`. The ASCII portrait, per-app character sets and the dither lens were removed.*
 
 ## Stage 2: Motion
 Done (13 Oct 2026).
 - [x] Lenis + GSAP ticker + ScrollTrigger (GSAP loads after first paint); motion class before first paint. Nothing is hidden in the server HTML, so no failsafe is needed for content; the boot screen has a CSS failsafe (hidden after 4s)
-- [x] Boot (loading) screen: once per session, skippable, real loading (fonts, images, motion libraries, window load), capped at 2.4s, under the menu bar. Shown still under reduced motion (Aakash asked for a loading page); not shown with System > Motion off or without JS
+- [x] Boot (loading) screen: once per session, skippable, real loading (fonts, images, motion libraries, window load), capped at 2.4s, under the menu bar. Not shown with System > Motion off or without JS
 - [x] Scramble (display headings) and fade-and-rise reveals (blocks), once each; on first load only what is off screen is hidden
 - [x] View-transition windows: open grows from the click point, close shrinks to the app's desktop corner; menu bar anchored
 - [x] Timeline: pinned horizontal scroll along the graph from 768px (active commit ringed, lines draw, `git show <hash>`, focus scrolls to a card); Profile statement lighting
-- *Decision: System > Motion is `auto` by default (follows prefers-reduced-motion); an explicit on/off from the visitor wins.*
+- *Decision (revised 14 Oct 2026): System > Motion is on by default and ignores prefers-reduced-motion; OS animation settings were switching the whole site still. Off in System > Motion is the opt-out. Guarded by `scripts/check-motion.mjs` before every build.*
 
 ## Stage 3: Extras
 Done (13 Oct 2026).
@@ -80,5 +80,5 @@ Done (13 Oct 2026).
 **Routing:** each route loads by URL; `/work/nope` 404s; back and forward work; ESC goes up one level.
 **Content:** every fact matches `PRD.md`; no phone number or birthday; no `[link]` placeholders; email, GitHub, LinkedIn and résumé work.
 **Accessibility:** keyboard reaches everything with visible focus; one `h1` per page; alt text; 4.5:1 contrast in all phosphors.
-**Motion:** reduced motion and JS off both show every page fully; nothing blocks the menu bar.
+**Motion:** plays with OS reduced-motion on (KDE "Instant" animations); System > Motion off and JS off both show every page fully; nothing blocks the menu bar.
 **Performance:** Lighthouse desktop 90+.

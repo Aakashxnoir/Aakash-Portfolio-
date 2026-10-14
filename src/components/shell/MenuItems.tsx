@@ -109,7 +109,6 @@ export function SurpriseItem() {
 
 export function SystemItems() {
   const prefs = usePrefs();
-  // Whether motion actually runs: "auto" follows the system setting.
   const moving = useSyncExternalStore(onPrefsChange, motionAllowed, () => true);
   const [about, setAbout] = useState(false);
   const system = menus.system;

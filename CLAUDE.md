@@ -19,7 +19,8 @@ Next.js 16 (App Router, statically generated, `cacheComponents` off) · TypeScri
 - Copy tone is professional, except the About statement, Contact, terminal replies and toys, which may be lightly playful.
 - Use the tokens from `DESIGN_SYSTEM.md`. No hard-coded colours in components (canvas code reads the CSS variables).
 - Desktop first (1440 and 1280); a simple stacked layout below 768px.
-- **Every animation has a reduced-motion fallback, and every page reads fully without JS.** Nothing blocks the menu bar, résumé or email link.
+- **Every animation has a still fallback (System > Motion off), and every page reads fully without JS.** Nothing blocks the menu bar, résumé or email link.
+- **Motion is always on by default. Never gate it on `prefers-reduced-motion`** (no `matchMedia` reduce checks, no `motion-safe:`/`motion-reduce:` variants, no `@media (prefers-reduced-motion)`). Linux/Windows desktops with animations turned down report `reduce` and the site went fully still on 14 Oct 2026. The only switch is System > Motion (`motionAllowed()` in `src/lib/prefs.ts`). `npm run build` enforces this via `scripts/check-motion.mjs`.
 - Lenis is the only smooth-scroll driver; ScrollTrigger reads from it. Canvases pause off screen and in hidden tabs.
 - Accessible by default: real `<a>` and `<button>`, visible focus, alt text, 4.5:1 contrast in every phosphor, one `h1` per page.
 - Keep components small and all copy in `src/content/`.
@@ -36,6 +37,6 @@ npm run lint     # must pass before finishing a stage
 ## Definition of done for any stage
 - Build and lint pass, no console errors
 - Checked at 1440px, 1280px and 390px
-- Reduced-motion and no-JS fallbacks checked for anything animated
+- Motion-off (System > Motion) and no-JS fallbacks checked for anything animated; motion plays on a machine with OS animations turned off
 - Lighthouse desktop Performance 90+ (from Stage 2 on)
 - Stage checklist in `IMPLEMENTATION_PLAN.md` ticked

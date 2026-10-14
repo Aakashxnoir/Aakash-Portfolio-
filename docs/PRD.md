@@ -75,11 +75,11 @@ Portrait (the photo, unfiltered), About statement (words light with scroll in St
 A mail window `contact.app - new message`: To (email, copy button), status, From, Subject chips, Message. **Send** opens the visitor's mail app (`mailto:`, no backend; works without JS as a GET form). LinkedIn, GitHub, Résumé beside it. Heading: the contact line.
 
 ### Signature moments
-| Moment | Stage | Fallback (reduced motion or no JS) |
+| Moment | Stage | Fallback (System > Motion off or no JS) |
 |---|---|---|
 | Generative ASCII project art | 1 | One still frame; no JS: hidden, titles remain |
 | Draggable project canvas | 1 | List view |
-| Boot (loading) screen: `NOIR/OS` boot log with a real loading counter, CRT power-on. Once per session, skippable, capped at 2.4s, under the menu bar | 2 | Reduced motion: shown still (no power-on, it fades). System > Motion off or no JS: not shown |
+| Boot (loading) screen: `NOIR/OS` boot log with a real loading counter, CRT power-on. Once per session, skippable, capped at 2.4s, under the menu bar | 2 | System > Motion off or no JS: not shown |
 | Lenis smooth scroll, text scramble and line reveals | 2 | Native scroll, text visible at once |
 | Window open and close (View Transitions from the clicked corner) | 2 | Instant route change |
 | Timeline scroll along the graph; Profile statement lighting | 2 | Plain list; statement fully lit |
@@ -92,7 +92,7 @@ Blog, CMS, login, contact form backend (`mailto:` only), analytics beyond Vercel
 ## 7. Non-functional requirements
 - **Performance:** Lighthouse desktop 90+ on every route. Fonts via `next/font`. Canvases start after first paint, pause when off screen or the tab is hidden, and cap the frame rate.
 - **Accessibility:** real `<a>` and `<button>`, visible focus, alt text, 4.5:1 text contrast in all three phosphors, full keyboard use, one `h1` per page. Canvases are decorative (`aria-hidden`) and every fact they suggest is in text.
-- **Progressive enhancement:** every page reads fully with JS off and under `prefers-reduced-motion`.
+- **Progressive enhancement:** every page reads fully with JS off and with System > Motion off. Motion is on by default and does not follow `prefers-reduced-motion` (OS animation settings were turning the whole site still).
 - **Routing:** every route loads by URL; back and forward work.
 - **Layout:** designed at 1440px; works from 1280px; phones get the stacked layout below 768px.
 - **SEO:** per-route title and description, Open Graph image naming the role and status, sitemap, robots.

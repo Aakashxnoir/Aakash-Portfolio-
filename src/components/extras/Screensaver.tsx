@@ -14,7 +14,7 @@ const NUDGE = 12;
 /**
  * The screensaver: after 90 seconds without input, or System > Sleep, the screen
  * goes dark but for one breathing red circle and the clock (the circle is still
- * under reduced motion). Any key, click, scroll or real mouse movement wakes it;
+ * with System > Motion off). Any key, click, scroll or real mouse movement wakes it;
  * that input does nothing else. While the tab is hidden its title changes.
  */
 export default function Screensaver() {

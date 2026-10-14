@@ -87,13 +87,14 @@ and Sleep. Leave the site alone for 90 seconds and it dozes off.
 
 ## Nothing waits on the animation
 
-Every effect has a fallback. With reduced motion or without JavaScript, every
-page is complete and still, and nothing ever blocks the menu bar, the résumé or
-the email link.
+Motion is on for everyone, even on machines with OS animations turned down;
+visitors can switch it off in System > Motion. With motion off or without
+JavaScript, every page is complete and still, and nothing ever blocks the menu
+bar, the résumé or the email link.
 
-| | With motion | Reduced motion or no JavaScript |
+| | With motion | Motion off or no JavaScript |
 |---|---|---|
-| Boot screen | powers on from a line, counts on real loading, opens from the middle | shown still, then fades (skipped without JavaScript) |
+| Boot screen | powers on from a line, counts on real loading, opens from the middle | skipped |
 | Windows | grow out of the corner you clicked (view transitions) | ordinary page changes |
 | Headings | scramble in from random glyphs | already there |
 | Projects | a canvas you drag, artworks drawn live | one still frame; the list without JavaScript |
@@ -144,7 +145,6 @@ node --experimental-strip-types scripts/readme/build.mjs
 ```
 
 It needs ImageMagick (`magick`) for the portrait, and the flag only on Node 22.
-With reduced motion on, each image is a still of its finished state.
 
 </details>
 

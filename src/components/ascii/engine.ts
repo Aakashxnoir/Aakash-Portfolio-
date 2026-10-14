@@ -124,14 +124,14 @@ export function drawValues(surface: Surface, values: Float32Array, text: Atlas, 
   }
 }
 
-/** Time used for the single still frame under reduced motion. */
+/** Time used for the single still frame with System > Motion off. */
 export const STILL_TIME = 2.4;
 
 export type Loop = { stop: () => void; redraw: () => void };
 
 /**
  * Runs `draw(seconds)` at up to `fps` while `el` is on screen, the tab is shown
- * and motion is allowed. Under reduced motion it draws one still frame instead.
+ * and motion is allowed. With System > Motion off it draws one still frame instead.
  * Re-evaluates when System > Motion changes.
  */
 export function startLoop(el: Element, draw: (time: number) => void, fps = 30): Loop {

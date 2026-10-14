@@ -60,7 +60,7 @@ Scale at 1440 (fluid with `clamp()`)
 - **Text link:** `--text`, 1px underline `--rule`; hover underline and text `--accent`.
 - **Button:** mono label in a 1px bordered box, no fill; hover fills `--text` with `--bg` text. The primary action fills `--accent`.
 - **Tag:** 1px `--accent` border box, 11px uppercase label in `--accent`.
-- **Status:** `open to internships` with a small solid accent square that breathes (opacity), still under reduced motion.
+- **Status:** `open to internships` with a small solid accent square that breathes (opacity), still with System > Motion off.
 - **Focus:** 2px `--accent` outline, 3px offset, on everything. Never removed.
 - **Cursor:** pixel arrow and pixel hand cursors (CSS `cursor: url()`), with system fallbacks.
 
@@ -87,7 +87,7 @@ Easing: `cubic-bezier(0.22, 1, 0.36, 1)` for reveals, `steps()` for anything tha
 
 Rules
 - Animate `transform` and `opacity`. Exceptions: canvas drawing, hover colour, the statement's word colour, SVG stroke drawing on the timeline, view-transition snapshots.
-- Every effect checks `prefers-reduced-motion` and the System > Motion switch, and has a no-JS fallback. Motion is `auto` (follows the system setting) until the visitor picks on or off in System > Motion; their choice wins.
+- Every effect checks the System > Motion switch (the `motion` class on `<html>`) and has a still fallback and a no-JS fallback. Motion is **on by default and does not follow `prefers-reduced-motion`**: desktops with animations turned down (KDE "Instant", GNOME animations off, Windows animation effects off) report `reduce`, and following it left the site with no motion at all (Aakash, 14 Oct 2026). Visitors who want it still pick off in System > Motion. `npm run build` fails if `(prefers-reduced-motion` or a `motion-safe:`/`motion-reduce:` variant appears in `src/` (`scripts/check-motion.mjs`).
 - Nothing blocks the menu bar, the résumé or the email link while animating.
 
 ## 8. Imagery

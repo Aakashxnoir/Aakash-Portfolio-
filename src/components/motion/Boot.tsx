@@ -37,7 +37,7 @@ export function afterBoot(callback: () => void) {
 /**
  * The NOIR/OS boot screen, once per session unless System > Motion is off (the
  * head script adds `boot` to <html>; without it this markup stays hidden).
- * Without motion it plays still: no power-on or opening, it fades. The counter follows
+ * If motion is switched off mid-boot it finishes still: no power-on or opening, it fades. The counter follows
  * real loading: fonts, images, the motion libraries and the window load event,
  * each printed as an [ ok ] line. Any key or click skips it; it never runs past
  * 2.4s, and a CSS failsafe hides it if this script never runs. It sits under

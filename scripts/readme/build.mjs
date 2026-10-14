@@ -5,8 +5,8 @@
 // Needs ImageMagick (`magick`) for the portrait. Everything is read from the
 // site itself: copy from src/content, colours from globals.css, the project
 // artworks from the real field functions, Doto from src/assets/fonts. GitHub
-// shows these as plain images, so everything moves with CSS keyframes, and
-// under reduced motion each one is a still of the finished state.
+// shows these as plain images, so everything moves with CSS keyframes. They
+// always animate: OS reduced-motion settings are ignored, as on the site.
 
 import { execFileSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -68,8 +68,7 @@ const paletteCss = (p) =>
     .join('')
 
 const BASE_CSS = `.mono{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono','Liberation Mono',monospace;white-space:pre}
-.fb{transform-box:fill-box;transform-origin:center}.fl{transform-box:fill-box;transform-origin:left center}.fr{transform-box:fill-box;transform-origin:right center}
-@media (prefers-reduced-motion:reduce){*{animation:none!important}}`
+.fb{transform-box:fill-box;transform-origin:center}.fl{transform-box:fill-box;transform-origin:left center}.fr{transform-box:fill-box;transform-origin:right center}`
 
 // --- Keyframes -------------------------------------------------------------
 
@@ -445,7 +444,7 @@ ${menuBar(G, W)}
 function divider() {
   const W = 960
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} 14" width="${W}" height="14" role="img" aria-label="">
-<style>@keyframes run{from{transform:translateX(-${W / 2}px)}to{transform:translateX(${W / 2}px)}}.run{animation:run 6s steps(48,end) infinite}@media (prefers-reduced-motion:reduce){.run{animation:none}}</style>
+<style>@keyframes run{from{transform:translateX(-${W / 2}px)}to{transform:translateX(${W / 2}px)}}.run{animation:run 6s steps(48,end) infinite}</style>
 <path d="M0 7.5H${W}" stroke="${NOIR['text-muted']}" stroke-opacity=".6" stroke-dasharray="1 3"/>
 <g class="run"><rect x="${W / 2 - 3}" y="4" width="6" height="6" fill="${NOIR.accent}"/></g>
 </svg>
