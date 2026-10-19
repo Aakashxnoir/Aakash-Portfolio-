@@ -11,8 +11,10 @@ import type { Phosphor } from "@/content/site";
  * `reduce`, and following it left the site with no motion at all. Aakash's call,
  * 14 Oct 2026; see docs/DESIGN_SYSTEM.md. Older stored "auto" values mean on.
  * The script also adds `js` (JS-only controls may show), `motion` (motion
- * effects may run) and, on the first page of a session unless motion is switched
- * off, `boot` (the boot screen plays).
+ * effects may run) and, unless motion is switched off, one of: `boot` on the
+ * first page of a session (the boot screen plays), or `enter` on every later
+ * full load (the page animates in without it; see Motion.tsx). Every full load
+ * with motion on gets an entrance, never a still page.
  * Without JS none of this happens and the page is complete, still and noir.
  */
 export type Motion = "on" | "off";
@@ -25,7 +27,7 @@ const KEY = "noiros:prefs";
 const BOOT_KEY = "noiros:booted";
 export const PREFS_EVENT = "noiros:prefs";
 
-export const prefsInitScript = `(function(){var d=document.documentElement;d.classList.add("js");var p={};try{p=JSON.parse(localStorage.getItem("${KEY}")||"{}")||{}}catch(e){}d.dataset.phosphor=p.phosphor||"noir";d.dataset.crt=p.crt||"on";var m=d.dataset.motion=p.motion==="off"?"off":"on";if(m==="on"){d.classList.add("motion");try{if(!sessionStorage.getItem("${BOOT_KEY}")){sessionStorage.setItem("${BOOT_KEY}","1");d.classList.add("boot")}}catch(e){}}})()`;
+export const prefsInitScript = `(function(){var d=document.documentElement;d.classList.add("js");var p={};try{p=JSON.parse(localStorage.getItem("${KEY}")||"{}")||{}}catch(e){}d.dataset.phosphor=p.phosphor||"noir";d.dataset.crt=p.crt||"on";var m=d.dataset.motion=p.motion==="off"?"off":"on";if(m==="on"){d.classList.add("motion");var b=0;try{if(!sessionStorage.getItem("${BOOT_KEY}")){sessionStorage.setItem("${BOOT_KEY}","1");b=1}}catch(e){}d.classList.add(b?"boot":"enter")}})()`;
 
 export function readPrefs(): Prefs {
   const d = document.documentElement.dataset;

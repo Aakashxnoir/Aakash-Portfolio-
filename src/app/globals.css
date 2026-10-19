@@ -318,6 +318,20 @@ html.boot .boot-layer {
     visibility: hidden;
   }
 }
+
+/* A full load without the boot screen (a reload, a later page of the session)
+ * still animates in: the head script adds `enter`, and headings and blocks wait
+ * hidden until src/components/motion/Motion.tsx has set their start state and
+ * removes it. If the script never runs, the failsafe shows them after 2s. */
+html.motion.enter :is([data-scramble], [data-reveal]) {
+  visibility: hidden;
+  animation: enter-failsafe 0.01s linear 2s forwards;
+}
+@keyframes enter-failsafe {
+  to {
+    visibility: visible;
+  }
+}
 .boot-half {
   position: absolute;
   inset-inline: 0;

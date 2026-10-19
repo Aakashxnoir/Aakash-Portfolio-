@@ -55,7 +55,7 @@ Done (13 Oct 2026).
 Done (13 Oct 2026).
 - [x] Lenis + GSAP ticker + ScrollTrigger (GSAP loads after first paint); motion class before first paint. Nothing is hidden in the server HTML, so no failsafe is needed for content; the boot screen has a CSS failsafe (hidden after 4s)
 - [x] Boot (loading) screen: once per session, skippable, real loading (fonts, images, motion libraries, window load), capped at 2.4s, under the menu bar. Not shown with System > Motion off or without JS
-- [x] Scramble (display headings) and fade-and-rise reveals (blocks), once each; on first load only what is off screen is hidden
+- [x] Scramble (display headings) and fade-and-rise reveals (blocks), once each; they play on every full load, with or without the boot screen (a reload is never still; fixed 19 Oct 2026, checked by `npm run test:motion`)
 - [x] View-transition windows: open grows from the click point, close shrinks to the app's desktop corner; menu bar anchored
 - [x] Timeline: pinned horizontal scroll along the graph from 768px (active commit ringed, lines draw, `git show <hash>`, focus scrolls to a card); Profile statement lighting
 - *Decision (revised 14 Oct 2026): System > Motion is on by default and ignores prefers-reduced-motion; OS animation settings were switching the whole site still. Off in System > Motion is the opt-out. Guarded by `scripts/check-motion.mjs` before every build.*
@@ -80,5 +80,5 @@ Done (13 Oct 2026).
 **Routing:** each route loads by URL; `/work/nope` 404s; back and forward work; ESC goes up one level.
 **Content:** every fact matches `PRD.md`; no phone number or birthday; no `[link]` placeholders; email, GitHub, LinkedIn and résumé work.
 **Accessibility:** keyboard reaches everything with visible focus; one `h1` per page; alt text; 4.5:1 contrast in all phosphors.
-**Motion:** plays with OS reduced-motion on (KDE "Instant" animations); System > Motion off and JS off both show every page fully; nothing blocks the menu bar.
+**Motion:** plays with OS reduced-motion on (KDE "Instant" animations), on a first visit and on a reload (`npm run test:motion`); System > Motion off and JS off both show every page fully; nothing blocks the menu bar.
 **Performance:** Lighthouse desktop 90+.

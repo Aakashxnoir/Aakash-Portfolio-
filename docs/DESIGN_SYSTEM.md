@@ -87,7 +87,7 @@ Easing: `cubic-bezier(0.22, 1, 0.36, 1)` for reveals, `steps()` for anything tha
 
 Rules
 - Animate `transform` and `opacity`. Exceptions: canvas drawing, hover colour, the statement's word colour, SVG stroke drawing on the timeline, view-transition snapshots.
-- Every effect checks the System > Motion switch (the `motion` class on `<html>`) and has a still fallback and a no-JS fallback. Motion is **on by default and does not follow `prefers-reduced-motion`**: desktops with animations turned down (KDE "Instant", GNOME animations off, Windows animation effects off) report `reduce`, and following it left the site with no motion at all (Aakash, 14 Oct 2026). Visitors who want it still pick off in System > Motion. `npm run build` fails if `(prefers-reduced-motion` or a `motion-safe:`/`motion-reduce:` variant appears in `src/` (`scripts/check-motion.mjs`).
+- Every effect checks the System > Motion switch (the `motion` class on `<html>`) and has a still fallback and a no-JS fallback. Motion is **on by default and does not follow `prefers-reduced-motion`**: desktops with animations turned down (KDE "Instant", GNOME animations off, Windows animation effects off) report `reduce`, and following it left the site with no motion at all (Aakash, 14 Oct 2026). Visitors who want it still pick off in System > Motion. `npm run build` fails if `(prefers-reduced-motion` or a `motion-safe:`/`motion-reduce:` variant appears in `src/` (`scripts/check-motion.mjs`). Every full page load animates in, boot screen or not: a reload or a later page of the session must never be still (19 Oct 2026). `npm run test:motion` checks first visit, reload and motion off in Chrome.
 - Nothing blocks the menu bar, the résumé or the email link while animating.
 
 ## 8. Imagery

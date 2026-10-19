@@ -21,6 +21,7 @@ Next.js 16 (App Router, statically generated, `cacheComponents` off) · TypeScri
 - Desktop first (1440 and 1280); a simple stacked layout below 768px.
 - **Every animation has a still fallback (System > Motion off), and every page reads fully without JS.** Nothing blocks the menu bar, résumé or email link.
 - **Motion is always on by default. Never gate it on `prefers-reduced-motion`** (no `matchMedia` reduce checks, no `motion-safe:`/`motion-reduce:` variants, no `@media (prefers-reduced-motion)`). Linux/Windows desktops with animations turned down report `reduce` and the site went fully still on 14 Oct 2026. The only switch is System > Motion (`motionAllowed()` in `src/lib/prefs.ts`). `npm run build` enforces this via `scripts/check-motion.mjs`.
+- **Every full page load animates in**, not only the first of a session. The boot screen is once per session, so page entry motion must never depend on it, on `sessionStorage`, or on a first-load flag (a reload went fully still on 19 Oct 2026). `npm run test:motion` loads each page in Chrome with OS reduced motion on and fails if a first visit or a reload doesn't animate.
 - Lenis is the only smooth-scroll driver; ScrollTrigger reads from it. Canvases pause off screen and in hidden tabs.
 - Accessible by default: real `<a>` and `<button>`, visible focus, alt text, 4.5:1 contrast in every phosphor, one `h1` per page.
 - Keep components small and all copy in `src/content/`.
@@ -32,11 +33,13 @@ Next.js 16 (App Router, statically generated, `cacheComponents` off) · TypeScri
 npm run dev      # local dev server
 npm run build    # must pass before finishing a stage
 npm run lint     # must pass before finishing a stage
+npm run test:motion  # motion plays on first visit and reload, with OS reduced motion on
 ```
 
 ## Definition of done for any stage
 - Build and lint pass, no console errors
 - Checked at 1440px, 1280px and 390px
 - Motion-off (System > Motion) and no-JS fallbacks checked for anything animated; motion plays on a machine with OS animations turned off
+- `npm run test:motion` passes (after `npm run build`; or `npm run test:motion -- <url>` against a deploy)
 - Lighthouse desktop Performance 90+ (from Stage 2 on)
 - Stage checklist in `IMPLEMENTATION_PLAN.md` ticked
