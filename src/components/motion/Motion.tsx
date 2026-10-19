@@ -16,10 +16,14 @@ const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
  * - `[data-reveal]` blocks fade and rise 24px as they enter, once
  * - `[data-lit]` text lights word by word, muted to full, with scroll (LitText)
  *
- * Nothing is hidden in the server HTML. On the first page load, what is already
- * on screen stays as painted (it only animates in as the boot screen opens);
- * blocks further down are hidden only once they are off screen and the script is
- * running. With System > Motion off, none of this runs.
+ * Every page animates in, on every full load and every navigation, whether or
+ * not the boot screen played (it plays once per session; a reload must not be
+ * still). Nothing is hidden in the server HTML. On the first page of a session
+ * the page animates in as the boot screen opens. On any later full load the head
+ * script adds `enter`, which keeps on-screen headings and blocks hidden (CSS,
+ * with a 2s failsafe) until setup has set their start state; then it goes.
+ * Blocks further down are hidden only once the script is running. With System >
+ * Motion off, none of this runs. `npm run test:motion` checks all of it.
  */
 export default function MotionController() {
   const pathname = usePathname();
@@ -32,22 +36,23 @@ export default function MotionController() {
     let cancelled = false;
     let offBoot = () => {};
 
-    const run = (libs: Motion, entering: boolean) => {
+    const run = (libs: Motion) => {
       if (cancelled || !motionAllowed()) return;
-      context = libs.gsap.context(() => setup(libs, entering));
+      context = libs.gsap.context(() => setup(libs));
+      document.documentElement.classList.remove("enter");
     };
 
     if (motionAllowed()) {
       const libs = motionLibs();
       if (libs && !first) {
         // A navigation: set the new page's start state before it paints.
-        run(libs, true);
+        run(libs);
       } else {
         const wasBooting = first && booting();
         loadMotion().then((loaded) => {
           if (cancelled) return;
-          if (wasBooting) offBoot = afterBoot(() => run(loaded, true));
-          else run(loaded, !first);
+          if (wasBooting) offBoot = afterBoot(() => run(loaded));
+          else run(loaded);
         });
       }
     }
@@ -71,7 +76,7 @@ export default function MotionController() {
   return null;
 }
 
-function setup({ gsap, ScrollTrigger }: Motion, entering: boolean) {
+function setup({ gsap, ScrollTrigger }: Motion) {
   const main = document.getElementById("main");
   if (!main) return;
   const fold = window.innerHeight;
@@ -96,14 +101,14 @@ function setup({ gsap, ScrollTrigger }: Motion, entering: boolean) {
         once: true,
         onEnter: () => void play(),
       });
-    } else if (where === "in" && entering) {
+    } else if (where === "in") {
       play();
     }
   });
 
   const blocks = Array.from(main.querySelectorAll<HTMLElement>("[data-reveal]"));
   const inView = blocks.filter((el) => place(el) === "in");
-  if (entering && inView.length) {
+  if (inView.length) {
     gsap.from(inView, {
       opacity: 0,
       y: 24,
