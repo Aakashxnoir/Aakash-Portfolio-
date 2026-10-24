@@ -1,7 +1,7 @@
 # PRD: Aakash Buddha Kannan, Portfolio (v3, "NOIR/OS")
 
 ## 1. Goal
-A portfolio that gets Aakash internship interviews. Within 10 seconds a recruiter knows **who he is, that he is open to internships, what he builds, and where his best work is**, and can email him, open GitHub or LinkedIn, or download the résumé in one click from the first screen.
+A portfolio that gets Aakash internship interviews. Within 10 seconds a recruiter knows **who he is, that he is open to internships, what he builds, and where his best work is**, and can email him, open GitHub or LinkedIn, or view or download the résumé in one click from the first screen.
 
 v3 is a rebuild from scratch, inspired by eddy-naboulet.dev (a portfolio dressed as an operating system). It replaces v2 "Noir Studio". The identity is his own: the handle **Aakashxnoir** and the `aakash@noir-system` prompt from his GitHub README.
 
@@ -40,8 +40,8 @@ Every claim is true and sourced from section 8. OS labels (file names, `[ ok ]`,
 ## 6. Structure (Next.js App Router, statically generated)
 
 ### Shell (every route)
-- **Menu bar:** home mark `ABK` (link to `/`), menus **File**, **Extras**, **System**; right side: status `open to internships` (link to `/contact`), `Résumé` (download), live clock in IST.
-  - File: open each app, open résumé, new message, copy email, GitHub, LinkedIn.
+- **Menu bar:** home mark `ABK` (link to `/`), menus **File**, **Extras**, **System**; right side: status `open to internships` (link to `/contact`), `Résumé` (view in a new tab), `↓` (download), live clock in IST.
+  - File: open each app, new message, open résumé (view), download résumé, copy email, GitHub, LinkedIn.
   - Extras: Terminal, Lights Out, Surprise me (a random case page).
   - System: phosphor (Noir, Amber, Green), CRT effect on/off, motion on/off, Sleep, About this site.
 - **Path bar** on every route except `/`: breadcrumbs from `~/desktop`, and `ESC - back to desktop` (or `close project` on a case page). ESC goes one level up.
@@ -51,7 +51,7 @@ Every claim is true and sourced from section 8. OS labels (file names, `[ ok ]`,
 1. Four corner apps: number, file name, title.
 2. Portrait behind the name: his photo, background removed, shown as a normal photo (decision, 13 Oct 2026: no ASCII treatment).
 3. Role label `FULL-STACK · ML · QUANTUM`, name `AAKASH BUDDHA KANNAN` at display size.
-4. Hero line, status, **Download résumé**, **GitHub**, **LinkedIn**, education line.
+4. Hero line, status, **Download résumé**, **View résumé**, **GitHub**, **LinkedIn**, education line.
 
 ### Projects `/work`
 - **Canvas view** (desktop, JS): a draggable plane of project tiles, each with a live generative ASCII artwork and its title. Drag, wheel or arrow keys pan; click opens the case.
@@ -179,7 +179,7 @@ Dates are shown only as precisely as the source gives them. Within 2026, project
 
 ### Contact
 - Heading: "Have a problem worth *solving?* File it with me."
-- Email, status, LinkedIn, GitHub, Résumé (PDF)
+- Email, status, LinkedIn, GitHub, View résumé, Download résumé
 
 ## 9. Open items (Aakash to provide)
 - [ ] RIT Digital Twin links; FarmSync demo video

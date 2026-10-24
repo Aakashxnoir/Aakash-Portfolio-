@@ -16,7 +16,8 @@ export default function ContactPage() {
   const elsewhere = [
     { label: labels.linkedin, href: site.linkedin, external: true },
     { label: labels.github, href: site.github, external: true },
-    { label: labels.resumePdf, href: site.resume, download: true },
+    { label: labels.viewResume, href: site.resume, external: true },
+    { label: labels.downloadResume, href: site.resume, download: true },
   ];
   return (
     <Window>
@@ -33,7 +34,7 @@ export default function ContactPage() {
             <p className="type-label mt-12 text-text-muted">{contact.elsewhere}</p>
             <ul className="mt-3 border-t border-rule">
               {elsewhere.map((link) => (
-                <li key={link.href} className="border-b border-rule">
+                <li key={link.label} className="border-b border-rule">
                   <a
                     href={link.href}
                     {...(link.external ? { target: "_blank", rel: "noreferrer" } : {})}

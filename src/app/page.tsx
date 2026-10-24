@@ -40,6 +40,9 @@ export default function Desktop() {
             <a href={site.resume} download className="btn btn-primary">
               {labels.downloadResume} ↓
             </a>
+            <a href={site.resume} target="_blank" rel="noreferrer" className="btn bg-bg">
+              {labels.viewResume} ↗
+            </a>
             <a href={site.github} target="_blank" rel="noreferrer" className="btn bg-bg">
               {labels.github} ↗
             </a>

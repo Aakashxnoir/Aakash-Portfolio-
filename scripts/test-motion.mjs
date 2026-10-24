@@ -124,7 +124,11 @@ try {
   const exited = new Promise((resolve) => browser.once("exit", resolve));
   browser.kill();
   await exited;
-  rmSync(profile, { recursive: true, force: true, maxRetries: 5 });
+  // Chrome's helper processes can still be writing to the profile after the
+  // main process exits; a leftover temp folder must not fail the check.
+  try {
+    rmSync(profile, { recursive: true, force: true, maxRetries: 10 });
+  } catch {}
 }
 
 if (failures) {

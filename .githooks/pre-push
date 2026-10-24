@@ -1,0 +1,11 @@
+#!/bin/sh
+# Blocks `git push` unless the production build and the runtime motion check
+# pass. Pushing to main redeploys the live site, and test:motion needs Chrome,
+# so it cannot run inside Vercel's build; this is where it runs instead.
+# It checks the working tree, so commit or stash other edits before pushing.
+#
+# Enable once per clone:  git config core.hooksPath .githooks
+# Skip in an emergency:   git push --no-verify
+set -e
+npm run build
+npm run test:motion

@@ -94,6 +94,7 @@ export const desktop = {
 export const labels = {
   resume: "Résumé",
   downloadResume: "Download résumé",
+  viewResume: "View résumé",
   resumePdf: "Résumé (PDF)",
   github: "GitHub",
   linkedin: "LinkedIn",
@@ -123,6 +124,7 @@ export const menus = {
     open: "Open",
     newMessage: "New message",
     resume: "Open résumé.pdf",
+    downloadResume: "Download résumé.pdf",
     copyEmail: "Copy email address",
     github: "GitHub",
     linkedin: "LinkedIn",

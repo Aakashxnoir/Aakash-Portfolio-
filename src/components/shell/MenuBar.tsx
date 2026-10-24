@@ -29,8 +29,11 @@ export default function MenuBar() {
           ))}
           <MenuRule />
           <MenuLink href="/contact">{menus.file.newMessage}</MenuLink>
-          <MenuLink href={site.resume} download note="PDF">
+          <MenuLink href={site.resume} external note="↗">
             {menus.file.resume}
+          </MenuLink>
+          <MenuLink href={site.resume} download note="↓">
+            {menus.file.downloadResume}
           </MenuLink>
           <CopyEmailItem />
           <MenuRule />
@@ -66,10 +69,19 @@ export default function MenuBar() {
         </Link>
         <a
           href={site.resume}
-          download
+          target="_blank"
+          rel="noreferrer"
           className="hidden items-center border-l border-rule px-4 text-text-soft transition-colors hover:text-accent md:flex"
         >
-          {labels.resume} ↓
+          {labels.resume} ↗
+        </a>
+        <a
+          href={site.resume}
+          download
+          aria-label={labels.downloadResume}
+          className="hidden items-center border-l border-rule px-3 text-text-soft transition-colors hover:text-accent md:flex"
+        >
+          ↓
         </a>
         <Clock className="hidden items-center gap-1.5 border-l border-rule px-4 text-text-soft lg:flex" />
       </div>
