@@ -12,8 +12,8 @@ const TOP = 72;
 /**
  * timeline.log with motion, from 768px: the panel (command line, graph, cards)
  * pins under the path bar and vertical scroll walks the cards sideways. The
- * active commit is ringed on the graph, the lines draw up to it, and the command
- * line shows `git show <hash>`. Focusing a card scrolls to it.
+ * active commit is ringed on the graph and the lines draw up to it. Focusing a
+ * card scrolls to it.
  *
  * Without motion (or JS) the same markup is a plain list. If motion is on but
  * this never runs, the card row still scrolls sideways on its own.
@@ -33,13 +33,11 @@ export default function TimelineScroller({ children }: { children: ReactNode }) 
         media.add("(min-width: 768px)", () => {
           const viewport = section.querySelector<HTMLElement>("[data-tl-viewport]")!;
           const track = section.querySelector<HTMLElement>("[data-tl-track]")!;
-          const command = section.querySelector<HTMLElement>("[data-tl-command]")!;
           const clip = section.querySelector<SVGRectElement>("[data-tl-clip]");
           const cards = Array.from(track.children) as HTMLElement[];
           const nodes = Array.from(section.querySelectorAll<SVGGElement>("[data-commit]"));
           const xs = nodes.map((node) => Number(node.dataset.x));
           const fullWidth = clip?.getAttribute("width") ?? "";
-          const logCommand = command.textContent;
           const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
 
           let active = -1;
@@ -53,8 +51,6 @@ export default function TimelineScroller({ children }: { children: ReactNode }) 
             active = index;
             nodes.forEach((node, i) => node.toggleAttribute("data-active", i === index));
             cards.forEach((card, i) => card.toggleAttribute("data-active", i === index));
-            command.textContent =
-              progress > 0 ? `${timelineLabels.showCommand} ${cards[index].id}` : logCommand;
           };
 
           section.dataset.pinned = "";
@@ -97,7 +93,6 @@ export default function TimelineScroller({ children }: { children: ReactNode }) 
             nodes.forEach((node) => node.removeAttribute("data-active"));
             cards.forEach((card) => card.removeAttribute("data-active"));
             clip?.setAttribute("width", fullWidth);
-            command.textContent = logCommand;
           };
         });
       });

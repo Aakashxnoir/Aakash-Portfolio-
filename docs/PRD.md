@@ -18,14 +18,16 @@ v3 is a rebuild from scratch, inspired by eddy-naboulet.dev (a portfolio dressed
 - Memorable: the OS shell, the boot screen, the generative ASCII project art and the small toys (terminal, F1 lights game) are what a visitor remembers. Never at the cost of reading the content.
 
 ## 4. Concept: NOIR/OS
-The site is Aakash's own operating system. A menu bar runs along the top (File, Extras, System, a live Chennai clock and the internship status). The home page is a desktop: four numbered apps sit in the corners and a photo of Aakash (background removed, natural colour) fills the middle with his name in huge dot-matrix letters across it. The first page of a visit opens with a `NOIR/OS` boot (loading) screen. Each app opens as a full-screen window with a path bar (`~/desktop / projects.vol`) and closes with ESC.
+The site is Aakash's own operating system. A menu bar runs along the top (File, Extras, System, a live Chennai clock and the internship status). The home page is a desktop: four numbered apps sit in the corners and a photo of Aakash (background removed, natural colour) fills the middle with his name in huge dot-matrix letters across it. The first page of a visit opens with a `NOIR/OS` boot (loading) screen. Each app opens as a full-screen window with a path bar (`Desktop / projects`) and closes with ESC.
 
 | App | File name | Route |
 |---|---|---|
-| 01 Projects | `projects.vol` | `/work`, `/work/[slug]` |
-| 02 Timeline | `timeline.log` | `/timeline` |
-| 03 Profile | `profile.sys` | `/about` |
-| 04 Contact | `contact.app` | `/contact` |
+| 01 Projects | `projects` | `/work`, `/work/[slug]` |
+| 02 Timeline | `timeline` | `/timeline` |
+| 03 Profile | `profile` | `/about` |
+| 04 Contact | `contact` | `/contact` |
+
+Decision, 26 Oct 2026: file names have no extensions (were `projects.vol`, `timeline.log`, `profile.sys`, `contact.app`).
 
 Extras are toys: a terminal that answers real commands about Aakash, and **Lights Out**, an F1 start-lights reaction game (he won a Grand Prix F1 gaming tournament). The System menu switches the screen's phosphor (noir, amber, green), the CRT effect and motion.
 
@@ -44,7 +46,7 @@ Every claim is true and sourced from section 8. OS labels (file names, `[ ok ]`,
   - File: open each app, new message, open résumé (view), download résumé, copy email, GitHub, LinkedIn.
   - Extras: Terminal, Lights Out, Surprise me (a random case page).
   - System: phosphor (Noir, Amber, Green), CRT effect on/off, motion on/off, Sleep, About this site.
-- **Path bar** on every route except `/`: breadcrumbs from `~/desktop`, and `ESC - back to desktop` (or `close project` on a case page). ESC goes one level up.
+- **Path bar** on every route except `/`: breadcrumbs from `Desktop` (decision, 26 Oct 2026: not `~/desktop`, which read as odd to viewers), and `ESC - back to desktop` (or `close project` on a case page). ESC goes one level up.
 - Menus work without JS (`<details>`), and every menu item is a real link or button.
 
 ### Desktop `/`
@@ -66,13 +68,13 @@ Slugs: `cheng`, `farmsync`, `rit-digital-twin`, `sevagan`, `infinitus`. Unknown 
 - Previous, All projects, Up next
 
 ### Timeline `/timeline`
-A git log of his path. A terminal line (`git log --graph`, then `git show <hash>` for the active commit), a horizontal branch graph (`main`, `build`, `wins`, `clubs`) and one large card per commit. Scroll moves along the graph (Stage 2). Without motion it is a plain ordered list.
+A git log of his path. A terminal line (`$ git log --graph`), a horizontal branch graph (`main`, `build`, `wins`, `clubs`) and one large card per commit. Scroll moves along the graph (Stage 2). Without motion it is a plain ordered list. Decision, 26 Oct 2026: no `aakash@noir-system` prompt and no commit hashes on the page (viewers read them as noise); the hashes stay in the Extras terminal.
 
 ### Profile `/about`
 Portrait (the photo, unfiltered), About statement (words light with scroll in Stage 2), body, roles as large headings with a paragraph and tags, Education, Recognition, a `neofetch`-style stack card, Outside work.
 
 ### Contact `/contact`
-A mail window `contact.app - new message`: To (email, copy button), status, From, Subject chips, Message. **Send** opens the visitor's mail app (`mailto:`, no backend; works without JS as a GET form). LinkedIn, GitHub, Résumé beside it. Heading: the contact line.
+A mail window `contact - new message`: To (email, copy button), status, From, Subject chips, Message. **Send** opens the visitor's mail app (`mailto:`, no backend; works without JS as a GET form). LinkedIn, GitHub, Résumé beside it. Heading: the contact line.
 
 ### Signature moments
 | Moment | Stage | Fallback (System > Motion off or no JS) |

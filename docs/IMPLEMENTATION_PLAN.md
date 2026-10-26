@@ -57,7 +57,7 @@ Done (13 Oct 2026).
 - [x] Boot (loading) screen: once per session, skippable, real loading (fonts, images, motion libraries, window load), capped at 2.4s, under the menu bar. Not shown with System > Motion off or without JS
 - [x] Scramble (display headings) and fade-and-rise reveals (blocks), once each; they play on every full load, with or without the boot screen (a reload is never still; fixed 19 Oct 2026, checked by `npm run test:motion`)
 - [x] View-transition windows: open grows from the click point, close shrinks to the app's desktop corner; menu bar anchored
-- [x] Timeline: pinned horizontal scroll along the graph from 768px (active commit ringed, lines draw, `git show <hash>`, focus scrolls to a card); Profile statement lighting
+- [x] Timeline: pinned horizontal scroll along the graph from 768px (active commit ringed, lines draw, focus scrolls to a card; the `git show <hash>` command line was dropped 26 Oct 2026 with the visible hashes); Profile statement lighting
 - *Decision (revised 14 Oct 2026): System > Motion is on by default and ignores prefers-reduced-motion; OS animation settings were switching the whole site still. Off in System > Motion is the opt-out. Guarded by `scripts/check-motion.mjs` before every build.*
 
 ## Stage 3: Extras

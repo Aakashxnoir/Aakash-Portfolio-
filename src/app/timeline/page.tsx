@@ -31,7 +31,7 @@ export default function TimelinePage() {
         <TimelineScroller>
           <div className="flex shrink-0 items-center gap-3 border-y border-rule bg-surface px-shell py-3 text-ui">
             <span className="text-accent">{timelineLabels.prompt}</span>
-            <span data-tl-command className="truncate text-text">
+            <span className="truncate text-text">
               {timelineLabels.logCommand}
             </span>
             <span aria-hidden className="breathe inline-block h-4 w-2 shrink-0 bg-text" />
@@ -50,9 +50,6 @@ export default function TimelinePage() {
                 <li key={commit.hash} id={commit.hash} className="tl-card scroll-mt-28">
                   <article className="grid gap-4 border-t border-rule py-10 md:grid-cols-12 md:gap-6">
                     <div className="type-label flex flex-wrap gap-x-4 gap-y-1 text-text-muted md:col-span-3 md:flex-col">
-                      <span className={commit.future ? "text-text-muted" : "text-accent"}>
-                        {commit.hash}
-                      </span>
                       <span>({commit.branch})</span>
                       <time>{commit.date}</time>
                     </div>

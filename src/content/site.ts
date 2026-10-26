@@ -40,7 +40,7 @@ export const apps: {
   {
     id: "work",
     number: "01",
-    file: "projects.vol",
+    file: "projects",
     title: "Projects",
     href: "/work",
     blurb: "Five case files",
@@ -48,7 +48,7 @@ export const apps: {
   {
     id: "timeline",
     number: "02",
-    file: "timeline.log",
+    file: "timeline",
     title: "Timeline",
     href: "/timeline",
     blurb: "git log of the path so far",
@@ -56,7 +56,7 @@ export const apps: {
   {
     id: "about",
     number: "03",
-    file: "profile.sys",
+    file: "profile",
     title: "Profile",
     href: "/about",
     blurb: "Roles, stack, education",
@@ -64,7 +64,7 @@ export const apps: {
   {
     id: "contact",
     number: "04",
-    file: "contact.app",
+    file: "contact",
     title: "Contact",
     href: "/contact",
     blurb: "New message",
@@ -102,7 +102,7 @@ export const labels = {
   copyEmail: "Copy email",
   copied: "Copied",
   home: "Back to desktop",
-  desktop: "~/desktop",
+  desktop: "Desktop",
   skipToContent: "Skip to content",
   escBack: "ESC - back to desktop",
   escClose: "ESC - close project",
@@ -174,7 +174,7 @@ export const contact: {
 } = {
   label: "Contact",
   heading: ["Have a problem worth ", { em: "solving?" }, " File it with me."],
-  window: "contact.app - new message",
+  window: "contact - new message",
   to: "To",
   from: "From",
   fromPlaceholder: "you@company.com",

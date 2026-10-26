@@ -36,7 +36,6 @@ const targets: Record<string, string> = {
   about: "/about",
   timeline: "/timeline",
   contact: "/contact",
-  ...Object.fromEntries(apps.map((app) => [app.file, app.href])),
   ...Object.fromEntries(projects.map((p) => [p.slug, `/work/${p.slug}`])),
 };
 
@@ -50,15 +49,15 @@ function cat(file: string | undefined): Line[] {
   switch (file) {
     case undefined:
       return [[terminal.catUsage]];
-    case "profile.sys":
+    case "profile":
       return [[profile.body]];
-    case "projects.vol":
+    case "projects":
       return projectLines();
-    case "timeline.log":
+    case "timeline":
       return commits.map((c) => [
         `${c.hash}  ${pad(`(${c.branch})`, 8)} ${pad(c.date, 9)} ${c.title}`,
       ]);
-    case "contact.app":
+    case "contact":
       return contactLines();
     case "resume.pdf":
       return [[terminal.catBinary(file)]];

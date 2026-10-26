@@ -144,9 +144,8 @@ export const timelineLabels = {
   title: "Timeline",
   description:
     "Aakash's path so far as a git log: the B.E. at Rajalakshmi Institute of Technology, projects, wins and club roles.",
-  prompt: "aakash@noir-system:~$",
+  prompt: "$",
   logCommand: "git log --graph --all --oneline",
-  showCommand: "git show",
   steps: "commits",
   branches: "branches",
   open: "Open case",

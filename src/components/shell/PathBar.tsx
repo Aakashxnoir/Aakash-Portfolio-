@@ -6,7 +6,7 @@ import EscapeKey from "./EscapeKey";
 export type Crumb = { label: string; href?: string };
 
 /**
- * The window's path under the menu bar: `~/desktop / projects.vol / cheng`, with
+ * The window's path under the menu bar: `Desktop / projects / cheng`, with
  * the ESC hint. ESC (and the hint) go to `up`.
  */
 export default function PathBar({
