@@ -119,7 +119,8 @@ export function run(input: string, ctx: Context): Line[] {
         ctx.openUrl(site.resume);
         return [[terminal.opening("resume.pdf")]];
       }
-      const href = targets[arg];
+      // Own keys only: `open constructor` must not reach Object.prototype.
+      const href = Object.hasOwn(targets, arg) ? targets[arg] : undefined;
       if (!href) return [[terminal.noSuchApp(arg)]];
       ctx.navigate(href);
       return [[terminal.opening(arg)]];

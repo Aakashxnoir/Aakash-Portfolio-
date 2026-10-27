@@ -187,5 +187,5 @@ Dates are shown only as precisely as the source gives them. Within 2026, project
 - [ ] RIT Digital Twin links; FarmSync demo video
 - [ ] Role and team size per project
 - [ ] Screenshots or short clips per project; Problem and Outcome lines, if he wants them
-- [ ] Whether the public résumé PDF keeps his phone number
+- [x] Whether the public résumé PDF keeps his phone number: no (decision, 28 Oct 2026). The copy with the number goes only to applications.
 - [ ] A domain (for `NEXT_PUBLIC_SITE_URL`)
